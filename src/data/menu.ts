@@ -51,6 +51,46 @@ export interface DistrictZone {
   time: string;
 }
 
+export const RESTAURANT_CONFIG = {
+  name: "La Leña — Pollería & Brasas",
+  phoneDisplay: "(01) 555-1998",
+  phoneTel: "+5115551998",
+  whatsappNumber: "51999999999",
+  whatsappDisplay: "+51 999 999 999",
+  address: "Av. Sucre 1998, Pueblo Libre, Lima",
+  googleMapsUrl: "https://maps.google.com/?q=Av.+Sucre+1998,+Pueblo+Libre,+Lima",
+  email: "pedidos@lalena.pe",
+  ruc: "20608765432",
+  legalName: "INVERSIONES GASTRONOMICAS LA LEÑA S.A.C.",
+};
+
+export const UPSELL_ITEMS = [
+  {
+    id: "chicha-morada-1l",
+    name: "Chicha Morada 1L",
+    priceNum: 14,
+    icon: "🥤",
+  },
+  {
+    id: "tequenos-brasa",
+    name: "Tequeños Brasa (8u)",
+    priceNum: 24,
+    icon: "🥟",
+  },
+  {
+    id: "aji-casa-pote",
+    name: "Pote Ají Extra 4oz",
+    priceNum: 4,
+    icon: "🌶️",
+  },
+  {
+    id: "inca-kola-15l",
+    name: "Inca Kola 1.5L",
+    priceNum: 12,
+    icon: "🥤",
+  },
+];
+
 export const DISTRICT_ZONES: DistrictZone[] = [
   { name: "Pueblo Libre", price: 4, time: "25-35 min" },
   { name: "Magdalena del Mar", price: 5, time: "30-40 min" },

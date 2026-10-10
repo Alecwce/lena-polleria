@@ -1,9 +1,12 @@
 ---
+import { RESTAURANT_CONFIG } from "../../data/menu";
+
 const NAV = [
   { label: "Combos", href: "#combos" },
   { label: "La Carta", href: "#carta" },
   { label: "Nosotros", href: "#nosotros" },
   { label: "Delivery", href: "#delivery" },
+  { label: "Preguntas Frecuentes", href: "#faq" },
   { label: "Local", href: "#local" },
 ];
 ---
@@ -17,13 +20,18 @@ const NAV = [
           <span class="font-display text-2xl font-bold">LA LEÑA</span>
         </div>
         <p class="mt-5 max-w-sm font-body text-base leading-relaxed text-[#FFF8E8]/70">
-          Pollería &amp; Brasas. El sabor a carbón de algarrobo que Lima
-          conoce desde 1998.
+          Pollería &amp; Brasas. El sabor a carbón de algarrobo norteño que Lima
+          conoce desde 1998. Pasión por la piel crocante y la carne jugosa.
         </p>
+        <div class="mt-6 font-body text-xs text-[#FFF8E8]/50 space-y-1">
+          <div>Razón Social: {RESTAURANT_CONFIG.legalName}</div>
+          <div>RUC: {RESTAURANT_CONFIG.ruc}</div>
+        </div>
       </div>
+
       <div>
         <div class="font-body text-xs font-bold uppercase tracking-[0.3em] text-[#FFB703]">
-          Menú
+          Menú &amp; Secciones
         </div>
         <ul class="mt-4 space-y-2 font-body text-[#FFF8E8]/80">
           {
@@ -37,39 +45,42 @@ const NAV = [
           }
         </ul>
       </div>
+
       <div>
         <div class="font-body text-xs font-bold uppercase tracking-[0.3em] text-[#FFB703]">
-          Contacto
+          Atención &amp; Contacto
         </div>
-        <ul class="mt-4 space-y-2 font-body text-[#FFF8E8]/80">
-          <li>(01) 555-1998</li>
-          <li>hola@lalena.pe</li>
-          <li>Av. Sucre 1998, Pueblo Libre</li>
-          <li class="flex gap-3 pt-2 text-xl">
-            <a
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Ir a nuestra página de Instagram"
-            >
-              📸
+        <ul class="mt-4 space-y-2.5 font-body text-[#FFF8E8]/80 text-sm">
+          <li>
+            <a href={`tel:${RESTAURANT_CONFIG.phoneTel}`} class="hover:text-[#FFB703] transition-colors">
+              📞 Central: {RESTAURANT_CONFIG.phoneDisplay}
             </a>
-            <a
-              href="https://tiktok.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Ir a nuestro perfil de TikTok"
-            >
-              🎵
+          </li>
+          <li>
+            <a href={`https://wa.me/${RESTAURANT_CONFIG.whatsappNumber}`} target="_blank" rel="noopener noreferrer" class="hover:text-[#FFB703] transition-colors">
+              💬 WhatsApp: {RESTAURANT_CONFIG.whatsappDisplay}
             </a>
-            <a
-              href="https://facebook.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Ir a nuestra página de Facebook"
-            >
-              👍
+          </li>
+          <li>
+            <a href={`mailto:${RESTAURANT_CONFIG.email}`} class="hover:text-[#FFB703] transition-colors">
+              ✉️ {RESTAURANT_CONFIG.email}
             </a>
+          </li>
+          <li>
+            <a href={RESTAURANT_CONFIG.googleMapsUrl} target="_blank" rel="noopener noreferrer" class="hover:text-[#FFB703] transition-colors">
+              📍 {RESTAURANT_CONFIG.address}
+            </a>
+          </li>
+          <li class="pt-2">
+            <!-- Libro de Reclamaciones Link Button -->
+            <button
+              id="open-reclamaciones-btn"
+              type="button"
+              class="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/5 px-3.5 py-2 font-body text-xs font-bold text-[#FFB703] transition-all hover:bg-white/10"
+              aria-label="Abrir Libro de Reclamaciones Virtual"
+            >
+              <span>📖</span> Libro de Reclamaciones Virtual
+            </button>
           </li>
         </ul>
       </div>
@@ -91,7 +102,141 @@ const NAV = [
       <span>
         © {new Date().getFullYear()} La Leña Pollería &amp; Brasas. Todos los derechos reservados.
       </span>
-      <span>Hecho con brasa en Lima 🇵🇪</span>
+      <span>Hecho con brasa viva en Pueblo Libre, Lima 🇵🇪</span>
     </div>
   </div>
 </footer>
+
+<!-- Modal: Libro de Reclamaciones Virtual (Indecopi D.S. N° 011-2011-PCM) -->
+<div
+  id="reclamaciones-modal"
+  class="fixed inset-0 z-[80] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="relative w-full max-w-lg rounded-3xl bg-[#FFF8E8] p-6 sm:p-8 text-[#1A1A1A] shadow-2xl max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between border-b border-[#4A2C1D]/15 pb-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📖</span>
+          <h3 class="font-display text-xl font-bold">Libro de Reclamaciones</h3>
+        </div>
+        <p class="font-body text-xs text-[#4A2C1D]/70 mt-0.5">
+          {RESTAURANT_CONFIG.legalName} · RUC {RESTAURANT_CONFIG.ruc}
+        </p>
+      </div>
+      <button
+        id="close-reclamaciones-btn"
+        type="button"
+        class="grid h-9 w-9 place-items-center rounded-full bg-[#1A1A1A]/10 text-lg font-bold hover:bg-[#C41E0A] hover:text-white transition-colors"
+        aria-label="Cerrar modal"
+      >
+        ✕
+      </button>
+    </div>
+
+    <form id="reclamaciones-form" class="mt-5 space-y-4 font-body text-xs font-bold text-[#4A2C1D]">
+      <div>
+        <label for="rec-name" class="block mb-1">Nombre Completo del Consumidor *</label>
+        <input id="rec-name" required type="text" placeholder="Ej: Juan Pérez" class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-3.5 py-2 font-normal text-sm" />
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label for="rec-doc" class="block mb-1">DNI / CE *</label>
+          <input id="rec-doc" required type="text" placeholder="8 dígitos" class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-3.5 py-2 font-normal text-sm" />
+        </div>
+        <div>
+          <label for="rec-phone" class="block mb-1">Teléfono Móvil *</label>
+          <input id="rec-phone" required type="tel" placeholder="987 654 321" class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-3.5 py-2 font-normal text-sm" />
+        </div>
+      </div>
+
+      <div>
+        <label for="rec-email" class="block mb-1">Correo Electrónico *</label>
+        <input id="rec-email" required type="email" placeholder="tu@correo.com" class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-3.5 py-2 font-normal text-sm" />
+      </div>
+
+      <div>
+        <label class="block mb-1">Tipo de Solicitud *</label>
+        <div class="flex gap-4 font-normal text-xs pt-1">
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" name="rec-tipo" value="Reclamo" checked class="text-[#C41E0A]" />
+            <span><strong>Reclamo:</strong> Disconformidad con el producto/servicio</span>
+          </label>
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="radio" name="rec-tipo" value="Queja" class="text-[#C41E0A]" />
+            <span><strong>Queja:</strong> Malestar en la atención</span>
+          </label>
+        </div>
+      </div>
+
+      <div>
+        <label for="rec-detail" class="block mb-1">Detalle del Reclamo o Queja *</label>
+        <textarea id="rec-detail" required rows="3" placeholder="Describe claramente lo sucedido con fecha y hora del pedido..." class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white p-3 font-normal text-sm"></textarea>
+      </div>
+
+      <button
+        type="submit"
+        class="btn-brasa w-full justify-center rounded-xl py-3.5 font-display text-sm font-bold text-center"
+      >
+        Registrar Hoja de Reclamación
+      </button>
+      <p class="text-[10px] font-normal text-[#4A2C1D]/60 text-center">
+        Conforme a la Ley N° 29571 (Código de Protección al Consumidor), se enviará una copia a tu correo y responderemos en un plazo máximo de 15 días hábiles.
+      </p>
+    </form>
+
+    <div id="reclamaciones-success" class="hidden mt-6 text-center py-6">
+      <div class="text-5xl mb-3">✅</div>
+      <h4 class="font-display text-lg font-bold">¡Reclamación Registrada!</h4>
+      <p class="font-body text-xs text-[#4A2C1D]/80 mt-1">
+        Código de seguimiento: <strong id="rec-ticket-code" class="text-[#C41E0A]">REC-2026-0042</strong>
+      </p>
+      <p class="font-body text-xs text-[#4A2C1D]/70 mt-2">
+        Hemos guardado tu constancia y nuestro equipo de gerencia se pondrá en contacto contigo.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initFooterModal() {
+    const openBtn = document.getElementById("open-reclamaciones-btn");
+    const closeBtn = document.getElementById("close-reclamaciones-btn");
+    const modal = document.getElementById("reclamaciones-modal");
+    const form = document.getElementById("reclamaciones-form") as HTMLFormElement | null;
+    const success = document.getElementById("reclamaciones-success");
+    const ticketCode = document.getElementById("rec-ticket-code");
+
+    const open = () => {
+      if (!modal) return;
+      modal.classList.remove("opacity-0", "pointer-events-none");
+      modal.classList.add("opacity-100", "pointer-events-auto");
+    };
+
+    const close = () => {
+      if (!modal) return;
+      modal.classList.add("opacity-0", "pointer-events-none");
+      modal.classList.remove("opacity-100", "pointer-events-auto");
+    };
+
+    openBtn?.addEventListener("click", open);
+    closeBtn?.addEventListener("click", close);
+
+    modal?.addEventListener("click", (e) => {
+      if (e.target === modal) close();
+    });
+
+    form?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const code = `REC-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+      if (ticketCode) ticketCode.textContent = code;
+      form.classList.add("hidden");
+      success?.classList.remove("hidden");
+    });
+  }
+
+  document.addEventListener("astro:page-load", initFooterModal);
+</script>

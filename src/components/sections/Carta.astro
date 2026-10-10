@@ -3,97 +3,187 @@ import { Picture } from "astro:assets";
 import { CARTA } from "../../data/menu";
 ---
 
-<section
-  id="carta-section"
-  class="glow-dark relative h-screen w-full overflow-hidden bg-[#1A1A1A]"
->
-  <div
-    id="carta-track"
-    class="flex h-full items-stretch gap-8 pl-[6vw] pr-[10vw] will-change-transform"
-    style="width: max-content;"
-  >
-    <div class="flex w-[80vw] shrink-0 flex-col justify-center md:w-[42vw]">
-      <p class="font-body text-sm font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+<section id="carta" class="relative bg-[#1A1A1A] text-[#FFF8E8]">
+  <!-- MOBILE VIEW (< 768px): Vertical Fast Catalog with Category Quick-Pills -->
+  <div class="block md:hidden py-14 px-4">
+    <div class="mb-6">
+      <p class="font-body text-xs font-bold uppercase tracking-[0.3em] text-[#FFB703]">
         La carta completa
       </p>
-      <h2
-        class="mt-4 font-display text-[clamp(3rem,8vw,96px)] font-bold leading-[0.9] text-[#FFF8E8]"
-      >
-        Desliza<br />
-        por la <span class="text-[#C41E0A]">brasa</span> →
+      <h2 class="mt-2 font-display text-4xl font-bold leading-none text-[#FFF8E8]">
+        Nuestra <span class="text-[#C41E0A]">Carta</span>
       </h2>
-      <p class="mt-6 max-w-md font-body text-lg leading-relaxed text-[#FFF8E8]/70">
-        Tres familias, un mismo fuego: pollos a la brasa, broasters
-        crocantes y parrillas a la leña. Sigue scrolleando para explorar.
+      <p class="mt-2 font-body text-sm text-[#FFF8E8]/70">
+        Toca cualquier plato para agregarlo directamente a tu pedido.
       </p>
     </div>
 
-    {
-      CARTA.map((group, gi) => (
-        <div class="flex shrink-0 items-center gap-6">
-          <div class="flex h-[60vh] w-[200px] shrink-0 flex-col justify-between rounded-3xl border border-[#FFF8E8]/10 bg-gradient-to-b from-[#C41E0A] to-[#7a1206] p-7 text-[#FFF8E8]">
-            <div>
-              <div class="font-display text-5xl font-bold opacity-30">0{gi + 1}</div>
-              <h3 class="mt-6 font-display text-4xl font-bold leading-none">{group.cat}</h3>
-            </div>
-            <p class="font-body text-sm font-medium leading-snug text-[#FFF8E8]/80">
-              {group.note}
-            </p>
-          </div>
+    <!-- Sticky Mobile Category Quick Filter Pills -->
+    <div class="sticky top-16 z-30 -mx-4 flex gap-2 overflow-x-auto bg-[#1A1A1A]/95 px-4 py-3 backdrop-blur-md border-y border-[#FFF8E8]/10 scrollbar-none">
+      {
+        CARTA.map((group, gi) => (
+          <a
+            href={`#cat-mobile-${gi}`}
+            class="mobile-cat-pill whitespace-nowrap rounded-full bg-white/10 px-3.5 py-1.5 font-display text-xs font-bold text-[#FFF8E8] transition-colors hover:bg-[#C41E0A] active:bg-[#C41E0A]"
+          >
+            {group.cat}
+          </a>
+        ))
+      }
+    </div>
 
-          {group.items.map((item) => (
-            <article class="dish-card group flex h-[64vh] w-[300px] shrink-0 flex-col overflow-hidden rounded-3xl bg-[#FFF8E8] shadow-[0_20px_50px_rgba(0,0,0,.4)] md:w-[340px]">
-              <div class="relative h-[55%] overflow-hidden">
-                <Picture
-                  src={item.img}
-                  formats={["avif", "webp"]}
-                  alt={`Plato de ${item.name}`}
-                  class="dish-img h-full w-full object-cover"
-                />
-                <div class="absolute right-3 top-3 rounded-full bg-[#1A1A1A] px-3 py-1 font-display text-sm font-bold text-[#FFB703]">
-                  {item.price}
+    <!-- Mobile Vertical Categories and Dish Cards -->
+    <div class="mt-8 space-y-10">
+      {
+        CARTA.map((group, gi) => (
+          <div id={`cat-mobile-${gi}`} class="scroll-mt-32 space-y-4">
+            <div class="flex items-baseline justify-between border-b border-[#FFF8E8]/10 pb-2">
+              <h3 class="font-display text-2xl font-bold text-[#FFB703]">{group.cat}</h3>
+              <span class="font-body text-xs text-[#FFF8E8]/60">{group.note}</span>
+            </div>
+
+            <div class="space-y-3">
+              {group.items.map((item) => (
+                <div class="flex items-center gap-3.5 rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur transition-all active:scale-[0.99]">
+                  <div class="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl">
+                    <Picture
+                      src={item.img}
+                      formats={["avif", "webp"]}
+                      alt={`Foto de ${item.name}`}
+                      class="h-full w-full object-cover"
+                    />
+                  </div>
+
+                  <div class="flex flex-1 flex-col justify-between min-w-0">
+                    <div>
+                      <div class="flex items-center justify-between gap-1">
+                        <h4 class="font-display text-base font-bold text-[#FFF8E8] truncate">
+                          {item.name}
+                        </h4>
+                        <span class="font-display text-sm font-bold text-[#FFB703] shrink-0">
+                          {item.price}
+                        </span>
+                      </div>
+                      <p class="font-body text-xs text-[#FFF8E8]/70 line-clamp-2 mt-0.5">
+                        {item.desc}
+                      </p>
+                    </div>
+
+                    <div class="mt-2 flex items-center justify-end">
+                      <button
+                        type="button"
+                        class="add-dish-btn flex items-center gap-1.5 rounded-full bg-[#C41E0A] px-3 py-1 font-body text-xs font-bold text-[#FFF8E8] transition-colors active:bg-[#A01606]"
+                        data-id={item.id}
+                        data-name={item.name}
+                        data-price={item.priceNum}
+                        data-ensalada={item.allowsEnsalada ? "true" : "false"}
+                        aria-label={`Añadir ${item.name} al pedido`}
+                      >
+                        <span>+</span> Agregar
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div class="flex flex-1 flex-col p-6">
-                <h4 class="font-display text-2xl font-bold leading-tight text-[#1A1A1A]">
-                  {item.name}
-                </h4>
-                <p class="mt-2 flex-1 font-body text-[15px] leading-relaxed text-[#4A2C1D]">
-                  {item.desc}
-                </p>
-                <div class="mt-4 flex items-center justify-between">
-                  <span class="font-body text-xs font-bold uppercase tracking-widest text-[#C41E0A]">
-                    {group.cat}
-                  </span>
-                  <button
-                    type="button"
-                    class="add-dish-btn plus-btn grid h-9 w-9 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] font-bold text-lg leading-none transition-transform hover:scale-110 active:scale-95 cursor-pointer border-none"
-                    data-id={item.id}
-                    data-name={item.name}
-                    data-price={item.priceNum}
-                    data-ensalada={item.allowsEnsalada ? "true" : "false"}
-                    aria-label={`Añadir ${item.name} al pedido`}
-                    title={`Añadir ${item.name}`}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      ))
-    }
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
   </div>
 
+  <!-- DESKTOP VIEW (>= 768px): Cinematic Horizontal Scroll Track with GSAP ScrollTrigger -->
   <div
-    class="absolute bottom-8 left-[6vw] right-[6vw] z-10 h-1.5 overflow-hidden rounded-full bg-[#FFF8E8]/15"
+    id="carta-desktop-container"
+    class="glow-dark hidden md:block relative h-screen w-full overflow-hidden bg-[#1A1A1A]"
   >
     <div
-      id="carta-progress-bar"
-      class="h-full origin-left rounded-full bg-[#FFB703]"
-      style="transform: scaleX(0);"
+      id="carta-track"
+      class="flex h-full items-stretch gap-8 pl-[6vw] pr-[10vw] will-change-transform"
+      style="width: max-content;"
     >
+      <div class="flex w-[42vw] shrink-0 flex-col justify-center">
+        <p class="font-body text-sm font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+          La carta completa
+        </p>
+        <h2
+          class="mt-4 font-display text-[clamp(3rem,8vw,96px)] font-bold leading-[0.9] text-[#FFF8E8]"
+        >
+          Desliza<br />
+          por la <span class="text-[#C41E0A]">brasa</span> →
+        </h2>
+        <p class="mt-6 max-w-md font-body text-lg leading-relaxed text-[#FFF8E8]/70">
+          Pollos a la brasa, broasters crocantes, parrillas a la leña, bebidas y piqueos. Sigue scrolleando para explorar.
+        </p>
+      </div>
+
+      {
+        CARTA.map((group, gi) => (
+          <div class="flex shrink-0 items-center gap-6">
+            <div class="flex h-[60vh] w-[200px] shrink-0 flex-col justify-between rounded-3xl border border-[#FFF8E8]/10 bg-gradient-to-b from-[#C41E0A] to-[#7a1206] p-7 text-[#FFF8E8]">
+              <div>
+                <div class="font-display text-5xl font-bold opacity-30">0{gi + 1}</div>
+                <h3 class="mt-6 font-display text-4xl font-bold leading-none">{group.cat}</h3>
+              </div>
+              <p class="font-body text-sm font-medium leading-snug text-[#FFF8E8]/80">
+                {group.note}
+              </p>
+            </div>
+
+            {group.items.map((item) => (
+              <article class="dish-card group flex h-[64vh] w-[300px] shrink-0 flex-col overflow-hidden rounded-3xl bg-[#FFF8E8] shadow-[0_20px_50px_rgba(0,0,0,.4)] md:w-[340px]">
+                <div class="relative h-[55%] overflow-hidden">
+                  <Picture
+                    src={item.img}
+                    formats={["avif", "webp"]}
+                    alt={`Plato de ${item.name}`}
+                    class="dish-img h-full w-full object-cover"
+                  />
+                  <div class="absolute right-3 top-3 rounded-full bg-[#1A1A1A] px-3 py-1 font-display text-sm font-bold text-[#FFB703]">
+                    {item.price}
+                  </div>
+                </div>
+                <div class="flex flex-1 flex-col p-6">
+                  <h4 class="font-display text-2xl font-bold leading-tight text-[#1A1A1A]">
+                    {item.name}
+                  </h4>
+                  <p class="mt-2 flex-1 font-body text-[15px] leading-relaxed text-[#4A2C1D]">
+                    {item.desc}
+                  </p>
+                  <div class="mt-4 flex items-center justify-between">
+                    <span class="font-body text-xs font-bold uppercase tracking-widest text-[#C41E0A]">
+                      {group.cat}
+                    </span>
+                    <button
+                      type="button"
+                      class="add-dish-btn plus-btn grid h-9 w-9 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] font-bold text-lg leading-none transition-transform hover:scale-110 active:scale-95 cursor-pointer border-none"
+                      data-id={item.id}
+                      data-name={item.name}
+                      data-price={item.priceNum}
+                      data-ensalada={item.allowsEnsalada ? "true" : "false"}
+                      aria-label={`Añadir ${item.name} al pedido`}
+                      title={`Añadir ${item.name}`}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+
+    <div
+      class="absolute bottom-8 left-[6vw] right-[6vw] z-10 h-1.5 overflow-hidden rounded-full bg-[#FFF8E8]/15"
+    >
+      <div
+        id="carta-progress-bar"
+        class="h-full origin-left rounded-full bg-[#FFB703]"
+        style="transform: scaleX(0);"
+      >
+      </div>
     </div>
   </div>
 </section>
@@ -104,11 +194,14 @@ import { CARTA } from "../../data/menu";
   let gsapCtx: ReturnType<typeof gsap.context> | undefined;
 
   async function initCartaScroll() {
-    const section = document.getElementById("carta-section");
+    // Only initialize horizontal GSAP scrollTrigger on desktop devices (width >= 768px)
+    if (window.innerWidth < 768) return;
+
+    const container = document.getElementById("carta-desktop-container");
     const track = document.getElementById("carta-track");
     const bar = document.getElementById("carta-progress-bar");
 
-    if (!section || !track || !bar) return;
+    if (!container || !track || !bar) return;
 
     // Dynamically import GSAP & ScrollTrigger
     const { default: gsap } = await import("gsap");
@@ -123,7 +216,7 @@ import { CARTA } from "../../data/menu";
         x: () => -getScroll(),
         ease: "none",
         scrollTrigger: {
-          trigger: section,
+          trigger: container,
           start: "top top",
           end: () => "+=" + getScroll(),
           pin: true,
@@ -134,7 +227,7 @@ import { CARTA } from "../../data/menu";
           },
         },
       });
-    }, section);
+    }, container);
   }
 
   function cleanupCarta() {

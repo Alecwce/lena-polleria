@@ -1,5 +1,5 @@
 ---
-import { DISTRICT_ZONES } from "../../data/menu";
+import { DISTRICT_ZONES, RESTAURANT_CONFIG, UPSELL_ITEMS } from "../../data/menu";
 ---
 
 <!-- Floating Cart Trigger Pill -->
@@ -40,6 +40,7 @@ import { DISTRICT_ZONES } from "../../data/menu";
 <!-- Order Drawer Panel -->
 <aside
   id="cart-drawer"
+  data-wa={RESTAURANT_CONFIG.whatsappNumber}
   class="fixed top-0 right-0 z-50 flex h-full w-full max-w-lg flex-col bg-[#FFF8E8] shadow-2xl transition-transform duration-300 translate-x-full text-[#1A1A1A]"
   aria-label="Tu pedido de delivery"
   aria-modal="true"
@@ -98,8 +99,41 @@ import { DISTRICT_ZONES } from "../../data/menu";
         <!-- Rendered dynamically by JS -->
       </div>
 
+      <!-- Upsell Quick-Add Recommendations -->
+      <div class="mt-5 rounded-2xl bg-[#FFB703]/10 border border-[#FFB703]/30 p-3.5">
+        <div class="flex items-center justify-between mb-2 font-body text-xs font-bold text-[#4A2C1D]">
+          <span>🔥 ¿Deseas acompañar tu pedido?</span>
+          <span class="rounded-full bg-[#C41E0A] px-2 py-0.5 text-[10px] font-black uppercase text-[#FFF8E8]">Recomendados</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          {
+            UPSELL_ITEMS.map((up) => (
+              <button
+                type="button"
+                class="quick-upsell-btn flex items-center justify-between gap-1.5 rounded-xl border border-[#4A2C1D]/15 bg-white px-2.5 py-2 text-left transition-all hover:border-[#C41E0A] hover:shadow-sm"
+                data-id={up.id}
+                data-name={up.name}
+                data-price={up.priceNum}
+              >
+                <div class="truncate">
+                  <div class="font-display text-xs font-bold text-[#1A1A1A] truncate">
+                    {up.icon} {up.name}
+                  </div>
+                  <div class="font-body text-[11px] font-bold text-[#C41E0A]">
+                    +S/ {up.priceNum}
+                  </div>
+                </div>
+                <span class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#FFF8E8] text-[#C41E0A] text-xs font-bold border border-[#4A2C1D]/15">
+                  +
+                </span>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
       <!-- Customer Checkout Details Form -->
-      <div class="mt-8 pt-6 border-t border-[#4A2C1D]/15 space-y-4">
+      <div class="mt-6 pt-5 border-t border-[#4A2C1D]/15 space-y-4">
         <h3 class="font-display text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
           <span>📍</span> Datos de Entrega
         </h3>
@@ -532,6 +566,18 @@ import { DISTRICT_ZONES } from "../../data/menu";
       }
     });
 
+    // Quick upsell recommendation buttons
+    document.querySelectorAll(".quick-upsell-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const el = btn as HTMLElement;
+        cart.addItem({
+          id: el.dataset.id || "",
+          name: el.dataset.name || "",
+          priceNum: Number(el.dataset.price || 0),
+        });
+      });
+    });
+
     // Send WhatsApp Order Handler
     whatsappBtn?.addEventListener("click", () => {
       const nameInput = document.getElementById("cart-customer-name") as HTMLInputElement | null;
@@ -603,7 +649,8 @@ ${orderLines}
 ¡Hola La Leña! Deseo confirmar este pedido por favor. 🔥`;
 
       const encoded = encodeURIComponent(msg);
-      const waUrl = `https://wa.me/51999999999?text=${encoded}`;
+      const waNumber = drawer?.dataset.wa || "51999999999";
+      const waUrl = `https://wa.me/${waNumber}?text=${encoded}`;
       window.open(waUrl, "_blank");
     });
 
