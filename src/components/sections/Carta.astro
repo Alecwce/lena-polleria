@@ -65,12 +65,16 @@ import { CARTA } from "../../data/menu";
                   <span class="font-body text-xs font-bold uppercase tracking-widest text-[#C41E0A]">
                     {group.cat}
                   </span>
-                  <button
-                    class="plus-btn grid h-9 w-9 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] font-bold border-none cursor-pointer"
-                    aria-label={`Añadir ${item.name} al pedido`}
+                  <a
+                    href={`https://wa.me/51999999999?text=${encodeURIComponent(`Hola La Leña 🔥, quisiera pedir: ${item.name} (${item.price})`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="plus-btn grid h-9 w-9 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] font-bold text-lg leading-none transition-transform hover:scale-110 active:scale-95"
+                    aria-label={`Pedir ${item.name} por WhatsApp`}
+                    title={`Pedir ${item.name}`}
                   >
                     +
-                  </button>
+                  </a>
                 </div>
               </div>
             </article>

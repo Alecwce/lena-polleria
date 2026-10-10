@@ -63,8 +63,8 @@ Este proyecto utiliza **pnpm** como gestor de paquetes.
 | `pnpm build` | Compila el sitio estático en la carpeta `dist/`. |
 | `pnpm preview` | Previsualiza localmente el build compilado. |
 | `pnpm check` | Realiza validaciones de tipos TypeScript y validación de sintaxis de Astro. |
-| `pnpm lint` | Analiza el código con ESLint. |
-| `pnpm format` | Formatea el código con Prettier. |
+| `pnpm lint` | Analiza el código ultrarrápido con Biome (`biome check .`). |
+| `pnpm format` | Formatea el código con Biome (`biome format --write .`). |
 | `pnpm deploy` | Compila el proyecto y realiza el despliegue a Cloudflare Pages mediante Wrangler CLI. |
 
 ---
@@ -76,7 +76,7 @@ Este proyecto utiliza **pnpm** como gestor de paquetes.
 
 ### Reglas de CSP Implementadas:
 - `script-src 'self' 'unsafe-inline'`: Requerido por Astro para inyectar scripts inline para View Transitions y bundles locales.
-- `font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com`: Permite la descarga de tipografías desde Fontshare/Google Fonts.
+- `font-src 'self' https://fonts.gstatic.com https://cdn.fontshare.com data:`: Permite la descarga de tipografías desde Fontshare/Google Fonts.
 - `style-src 'self' 'unsafe-inline' https://api.fontshare.com`: Permite estilos inline de Tailwind y las hojas de estilos externas de Fontshare.
 
 ---

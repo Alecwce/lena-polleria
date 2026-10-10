@@ -1,17 +1,16 @@
 import type { ImageMetadata } from "astro";
-
+import imgAnticuchos from "../assets/anticuchos.png";
+import imgBroaster from "../assets/broaster.png";
+import imgBroasterClose from "../assets/broasterClose.png";
+import imgChurrasco from "../assets/churrasco.png";
+import imgEnteroPlato from "../assets/enteroPlato.png";
+import imgFamiliar from "../assets/familiar.png";
+import imgFuego from "../assets/fuego.png";
 // Import local images
 import imgHero from "../assets/hero.png";
-import imgFamiliar from "../assets/familiar.png";
 import imgMedio from "../assets/medio.png";
-import imgPersonal from "../assets/personal.png";
-import imgBroaster from "../assets/broaster.png";
-import imgAnticuchos from "../assets/anticuchos.png";
 import imgParrilla from "../assets/parrilla.png";
-import imgBroasterClose from "../assets/broasterClose.png";
-import imgEnteroPlato from "../assets/enteroPlato.png";
-import imgFuego from "../assets/fuego.png";
-import imgChurrasco from "../assets/churrasco.png";
+import imgPersonal from "../assets/personal.png";
 
 export interface Combo {
   tag: string;

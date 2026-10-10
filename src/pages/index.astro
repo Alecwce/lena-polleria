@@ -1,17 +1,17 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Navbar from "../components/sections/Navbar.astro";
-import Hero from "../components/sections/Hero.astro";
-import SocialProof from "../components/sections/SocialProof.astro";
-import Combos from "../components/sections/Combos.astro";
-import Carta from "../components/sections/Carta.astro";
 import About from "../components/sections/About.astro";
+import Carta from "../components/sections/Carta.astro";
+import Combos from "../components/sections/Combos.astro";
 import Delivery from "../components/sections/Delivery.astro";
-import Local from "../components/sections/Local.astro";
 import Footer from "../components/sections/Footer.astro";
+import Hero from "../components/sections/Hero.astro";
+import Local from "../components/sections/Local.astro";
+import Navbar from "../components/sections/Navbar.astro";
+import SocialProof from "../components/sections/SocialProof.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
 
 // Enable route caching for dev testing or future SSR conversion
-if (Astro.cache && Astro.cache.enabled) {
+if (Astro.cache?.enabled) {
   Astro.cache.set({
     maxAge: 3600, // 3600 seconds (1 hour)
   });
@@ -31,7 +31,7 @@ if (Astro.cache && Astro.cache.enabled) {
   </div>
 
   <Navbar />
-  <main>
+  <main id="main-content" tabindex="-1">
     <Hero />
     <SocialProof />
     <Combos />

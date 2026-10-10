@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lalena.pe/sitemap.xml
+Sitemap: https://lalena.pe/sitemap-index.xml

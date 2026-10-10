@@ -5,8 +5,9 @@
  * Si se migra a SSR, usar @astrojs/cloudflare adapter
  * y este pipeline toma el control completo.
  */
+
+import { middleware, pages } from "astro/hono";
 import { Hono } from "hono";
-import { pages, middleware } from "astro/hono";
 import { securityHeaders } from "./middleware/security";
 
 const app = new Hono();
