@@ -65,16 +65,18 @@ import { CARTA } from "../../data/menu";
                   <span class="font-body text-xs font-bold uppercase tracking-widest text-[#C41E0A]">
                     {group.cat}
                   </span>
-                  <a
-                    href={`https://wa.me/51999999999?text=${encodeURIComponent(`Hola La Leña 🔥, quisiera pedir: ${item.name} (${item.price})`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="plus-btn grid h-9 w-9 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] font-bold text-lg leading-none transition-transform hover:scale-110 active:scale-95"
-                    aria-label={`Pedir ${item.name} por WhatsApp`}
-                    title={`Pedir ${item.name}`}
+                  <button
+                    type="button"
+                    class="add-dish-btn plus-btn grid h-9 w-9 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] font-bold text-lg leading-none transition-transform hover:scale-110 active:scale-95 cursor-pointer border-none"
+                    data-id={item.id}
+                    data-name={item.name}
+                    data-price={item.priceNum}
+                    data-ensalada={item.allowsEnsalada ? "true" : "false"}
+                    aria-label={`Añadir ${item.name} al pedido`}
+                    title={`Añadir ${item.name}`}
                   >
                     +
-                  </a>
+                  </button>
                 </div>
               </div>
             </article>
@@ -141,6 +143,23 @@ import { CARTA } from "../../data/menu";
     }
   }
 
-  document.addEventListener("astro:page-load", initCartaScroll);
+  function initDishClicks() {
+    document.querySelectorAll(".add-dish-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const el = btn as HTMLElement;
+        (window as any).LenaCart?.addItem({
+          id: el.dataset.id,
+          name: el.dataset.name,
+          priceNum: Number(el.dataset.price),
+          allowsEnsalada: el.dataset.ensalada === "true",
+        });
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    initCartaScroll();
+    initDishClicks();
+  });
   document.addEventListener("astro:before-preparation", cleanupCarta, { once: true });
 </script>

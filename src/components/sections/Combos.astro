@@ -57,16 +57,20 @@ import { COMBOS } from "../../data/menu";
               <p class="mt-3 flex-1 font-body text-base leading-relaxed text-[#4A2C1D]">
                 {c.desc}
               </p>
-              <a
-                href="#delivery"
-                class="mt-6 inline-flex items-center gap-2 font-body text-sm font-bold text-[#C41E0A]"
-                aria-label={`Agregar el ${c.name} a tu pedido de delivery`}
+              <button
+                type="button"
+                class="add-combo-btn mt-6 inline-flex items-center gap-2 font-body text-sm font-bold text-[#C41E0A] hover:text-[#A01606] transition-colors cursor-pointer text-left"
+                data-id={c.id}
+                data-name={c.name}
+                data-price={c.priceNum}
+                data-ensalada={c.allowsEnsalada ? "true" : "false"}
+                aria-label={`Agregar el ${c.name} a tu pedido`}
               >
                 Agregar al pedido
                 <span class="add-arrow" aria-hidden="true">
                   →
                 </span>
-              </a>
+              </button>
             </div>
           </article>
         ))
@@ -111,6 +115,23 @@ import { COMBOS } from "../../data/menu";
     }
   }
 
-  document.addEventListener("astro:page-load", initCombosAnimations);
+  function initComboClicks() {
+    document.querySelectorAll(".add-combo-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const el = btn as HTMLElement;
+        (window as any).LenaCart?.addItem({
+          id: el.dataset.id,
+          name: el.dataset.name,
+          priceNum: Number(el.dataset.price),
+          allowsEnsalada: el.dataset.ensalada === "true",
+        });
+      });
+    });
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    initCombosAnimations();
+    initComboClicks();
+  });
   document.addEventListener("astro:before-preparation", cleanupCombos, { once: true });
 </script>

@@ -13,19 +13,30 @@ const NAV = [
   class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-transparent py-5"
 >
   <div class="mx-auto flex max-w-[1400px] items-center justify-between px-5 md:px-10">
-    <a href="#top" class="flex items-center gap-2" aria-label="Volver arriba">
-      <span
-        class="grid h-10 w-10 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] text-lg shadow-[0_6px_18px_rgba(196,30,10,.4)]"
+    <div class="flex items-center gap-3">
+      <a href="#top" class="flex items-center gap-2" aria-label="Volver arriba">
+        <span
+          class="grid h-10 w-10 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] text-lg shadow-[0_6px_18px_rgba(196,30,10,.4)]"
+        >
+          🔥
+        </span>
+        <span
+          id="logo-name"
+          class="font-display text-2xl font-bold tracking-tight transition-colors text-[#FFF8E8]"
+        >
+          LA&nbsp;LEÑA
+        </span>
+      </a>
+
+      <!-- Live Hours Status Pill -->
+      <div
+        id="live-hours-pill"
+        class="hidden sm:flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 font-body text-xs font-bold text-[#FFF8E8] backdrop-blur border border-white/10"
       >
-        🔥
-      </span>
-      <span
-        id="logo-name"
-        class="font-display text-2xl font-bold tracking-tight transition-colors text-[#FFF8E8]"
-      >
-        LA&nbsp;LEÑA
-      </span>
-    </a>
+        <span id="live-hours-dot" class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+        <span id="live-hours-text">Horno Encendido</span>
+      </div>
+    </div>
 
     <!-- Desktop Navigation -->
     <nav class="hidden items-center gap-7 lg:flex" aria-label="Navegación principal">
@@ -211,6 +222,29 @@ const NAV = [
     };
     window.addEventListener("keydown", onKeydown);
 
+    function updateLiveHours() {
+      const dot = document.getElementById("live-hours-dot");
+      const text = document.getElementById("live-hours-text");
+
+      const now = new Date();
+      const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      const limaDate = new Date(utc - 3600000 * 5); // Lima UTC-5
+      const hour = limaDate.getHours();
+      const day = limaDate.getDay();
+
+      const closeHour = day === 5 || day === 6 ? 24 : 23;
+      const isOpen = hour >= 11 && hour < closeHour;
+
+      if (isOpen) {
+        if (dot) dot.className = "h-2 w-2 rounded-full bg-green-500 animate-pulse";
+        if (text) text.textContent = "Horno Encendido";
+      } else {
+        if (dot) dot.className = "h-2 w-2 rounded-full bg-amber-500";
+        if (text) text.textContent = "Cerrado · Abre 11 AM";
+      }
+    }
+
+    updateLiveHours();
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
 

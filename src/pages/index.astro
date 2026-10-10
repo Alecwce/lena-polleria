@@ -1,8 +1,10 @@
 ---
+import OrderDrawer from "../components/cart/OrderDrawer.astro";
 import About from "../components/sections/About.astro";
 import Carta from "../components/sections/Carta.astro";
 import Combos from "../components/sections/Combos.astro";
 import Delivery from "../components/sections/Delivery.astro";
+import FAQ from "../components/sections/FAQ.astro";
 import Footer from "../components/sections/Footer.astro";
 import Hero from "../components/sections/Hero.astro";
 import Local from "../components/sections/Local.astro";
@@ -38,19 +40,13 @@ if (Astro.cache?.enabled) {
     <Carta />
     <About />
     <Delivery />
+    <FAQ />
     <Local />
   </main>
   <Footer />
 
-  <!-- Floating order pill for quick delivery action -->
-  <a
-    id="floating-order-pill"
-    href="#delivery"
-    class="floating-pill btn-brasa rounded-full px-6 py-3.5 font-body text-sm font-bold"
-    aria-label="Pedir delivery ahora"
-  >
-    <span class="flame-ico mr-2" aria-hidden="true">🛵</span> Pedir ahora
-  </a>
+  <!-- Interactive Order Cart Drawer -->
+  <OrderDrawer />
 </BaseLayout>
 
 <script>
@@ -84,31 +80,6 @@ if (Astro.cache?.enabled) {
     });
   }
 
-  function initFloatingOrder() {
-    const pill = document.getElementById("floating-order-pill");
-    if (!pill) return;
-
-    const onScroll = () => {
-      const show = window.scrollY > 700;
-      if (show) {
-        pill.classList.add("show");
-      } else {
-        pill.classList.remove("show");
-      }
-    };
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-
-    document.addEventListener(
-      "astro:before-preparation",
-      () => {
-        window.removeEventListener("scroll", onScroll);
-      },
-      { once: true }
-    );
-  }
-
   function cleanupIndex() {
     if (gsapCtx) {
       gsapCtx.revert();
@@ -117,7 +88,6 @@ if (Astro.cache?.enabled) {
 
   document.addEventListener("astro:page-load", () => {
     initScrollProgress();
-    initFloatingOrder();
   });
   document.addEventListener("astro:before-preparation", cleanupIndex, { once: true });
 </script>

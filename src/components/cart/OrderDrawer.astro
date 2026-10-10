@@ -1,0 +1,590 @@
+---
+import { DISTRICT_ZONES } from "../../data/menu";
+---
+
+<!-- Floating Cart Trigger Pill -->
+<div
+  id="floating-cart-pill"
+  class="fixed bottom-5 right-5 z-50 flex items-center shadow-2xl transition-all duration-300 translate-y-28 opacity-0 pointer-events-none"
+>
+  <button
+    id="open-cart-btn"
+    type="button"
+    class="btn-brasa group flex items-center gap-3 rounded-full px-6 py-4 font-body text-base font-bold shadow-[0_12px_30px_rgba(196,30,10,0.4)] transition-transform active:scale-95"
+    aria-label="Abrir resumen de pedido"
+  >
+    <span class="relative flex items-center text-xl">
+      🛒
+      <span
+        id="cart-badge-count"
+        class="absolute -top-2 -right-3 grid h-5 w-5 place-items-center rounded-full bg-[#FFB703] font-display text-xs font-black text-[#1A1A1A] ring-2 ring-[#C41E0A]"
+      >
+        0
+      </span>
+    </span>
+    <span class="font-display font-bold">Ver Pedido</span>
+    <span class="rounded-full bg-white/20 px-2.5 py-0.5 text-sm font-black" id="cart-badge-total">
+      S/ 0
+    </span>
+  </button>
+</div>
+
+<!-- Order Drawer Backdrop -->
+<div
+  id="cart-backdrop"
+  class="fixed inset-0 z-50 bg-[#1A1A1A]/80 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none"
+  aria-hidden="true"
+>
+</div>
+
+<!-- Order Drawer Panel -->
+<aside
+  id="cart-drawer"
+  class="fixed top-0 right-0 z-50 flex h-full w-full max-w-lg flex-col bg-[#FFF8E8] shadow-2xl transition-transform duration-300 translate-x-full text-[#1A1A1A]"
+  aria-label="Tu pedido de delivery"
+  aria-modal="true"
+  role="dialog"
+>
+  <!-- Drawer Header -->
+  <div class="flex items-center justify-between border-b border-[#4A2C1D]/15 bg-[#1A1A1A] px-6 py-5 text-[#FFF8E8]">
+    <div>
+      <div class="flex items-center gap-2">
+        <span class="text-xl">🔥</span>
+        <h2 class="font-display text-2xl font-bold tracking-tight">Tu Pedido</h2>
+      </div>
+      <div class="mt-1 flex items-center gap-2 font-body text-xs text-[#FFB703]">
+        <span class="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+        <span id="drawer-live-status">Horno Encendido · Entrega en 30-40 min</span>
+      </div>
+    </div>
+    <button
+      id="close-cart-btn"
+      type="button"
+      class="grid h-10 w-10 place-items-center rounded-full bg-white/10 text-xl font-bold text-[#FFF8E8] transition-colors hover:bg-[#C41E0A]"
+      aria-label="Cerrar pedido"
+    >
+      ✕
+    </button>
+  </div>
+
+  <!-- Items Scrollable Area -->
+  <div class="flex-1 overflow-y-auto px-6 py-5">
+    <!-- Empty Cart State -->
+    <div id="cart-empty-state" class="flex flex-col items-center justify-center py-16 text-center">
+      <div class="text-7xl mb-4 select-none opacity-80 animate-bounce">🍗</div>
+      <h3 class="font-display text-2xl font-bold text-[#1A1A1A]">Tu bandeja está vacía</h3>
+      <p class="mt-2 max-w-xs font-body text-sm text-[#4A2C1D]/80">
+        Agrega pollos a la brasa, combos familiares, bebidas o tequeños desde la carta para armar tu pedido.
+      </p>
+      <button
+        id="start-shopping-btn"
+        type="button"
+        class="btn-brasa mt-6 rounded-full px-6 py-3 font-body text-sm font-bold"
+      >
+        Ver la carta ahora →
+      </button>
+    </div>
+
+    <!-- Active Cart Items Container -->
+    <div id="cart-items-container" class="hidden space-y-4">
+      <div class="flex items-center justify-between pb-2 border-b border-[#4A2C1D]/10">
+        <span class="font-body text-xs font-bold uppercase tracking-wider text-[#C41E0A]">Platos Seleccionados</span>
+        <button id="clear-cart-btn" type="button" class="font-body text-xs text-[#4A2C1D]/70 hover:text-[#C41E0A] underline">
+          Vaciar bandeja
+        </button>
+      </div>
+
+      <div id="cart-items-list" class="space-y-3">
+        <!-- Rendered dynamically by JS -->
+      </div>
+
+      <!-- Customer Checkout Details Form -->
+      <div class="mt-8 pt-6 border-t border-[#4A2C1D]/15 space-y-4">
+        <h3 class="font-display text-lg font-bold text-[#1A1A1A] flex items-center gap-2">
+          <span>📍</span> Datos de Entrega
+        </h3>
+
+        <div>
+          <label for="cart-customer-name" class="block font-body text-xs font-bold text-[#4A2C1D] mb-1">
+            Tu Nombre Completo *
+          </label>
+          <input
+            id="cart-customer-name"
+            type="text"
+            placeholder="Ej: Carlos Mendoza"
+            class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-4 py-2.5 font-body text-sm text-[#1A1A1A] focus:border-[#C41E0A] focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label for="cart-customer-district" class="block font-body text-xs font-bold text-[#4A2C1D] mb-1">
+            Distrito o Modalidad de Entrega *
+          </label>
+          <select
+            id="cart-customer-district"
+            class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-4 py-2.5 font-body text-sm text-[#1A1A1A] focus:border-[#C41E0A] focus:outline-none"
+          >
+            {
+              DISTRICT_ZONES.map((d) => (
+                <option value={d.name} data-price={d.price}>
+                  {d.name} {d.price === 0 ? "(Gratis)" : `(+S/ ${d.price})`} — {d.time}
+                </option>
+              ))
+            }
+          </select>
+        </div>
+
+        <div>
+          <label for="cart-customer-address" class="block font-body text-xs font-bold text-[#4A2C1D] mb-1">
+            Dirección Exacta y Referencia *
+          </label>
+          <input
+            id="cart-customer-address"
+            type="text"
+            placeholder="Ej: Av. Brasil 2340 Dpto 802 (Frente a Plaza Vea)"
+            class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-4 py-2.5 font-body text-sm text-[#1A1A1A] focus:border-[#C41E0A] focus:outline-none"
+          />
+        </div>
+
+        <div>
+          <label class="block font-body text-xs font-bold text-[#4A2C1D] mb-2">
+            Método de Pago *
+          </label>
+          <div class="grid grid-cols-2 gap-2 font-body text-xs font-bold">
+            <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-[#4A2C1D]/20 bg-white p-3 hover:border-[#C41E0A]">
+              <input type="radio" name="cart-payment" value="Yape" checked class="text-[#C41E0A]" />
+              <span>📱 Yape</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-[#4A2C1D]/20 bg-white p-3 hover:border-[#C41E0A]">
+              <input type="radio" name="cart-payment" value="Plin" class="text-[#C41E0A]" />
+              <span>📱 Plin</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-[#4A2C1D]/20 bg-white p-3 hover:border-[#C41E0A]">
+              <input type="radio" name="cart-payment" value="Efectivo" class="text-[#C41E0A]" />
+              <span>💵 Efectivo</span>
+            </label>
+            <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-[#4A2C1D]/20 bg-white p-3 hover:border-[#C41E0A]">
+              <input type="radio" name="cart-payment" value="Tarjeta POS" class="text-[#C41E0A]" />
+              <span>💳 POS Tarjeta</span>
+            </label>
+          </div>
+        </div>
+
+        <div id="cash-change-container" class="hidden">
+          <label for="cart-cash-amount" class="block font-body text-xs font-bold text-[#4A2C1D] mb-1">
+            ¿Con qué billete pagarás? (Para llevarte vuelto exacto)
+          </label>
+          <input
+            id="cart-cash-amount"
+            type="text"
+            placeholder="Ej: Pago con billete de S/ 100 o S/ 200"
+            class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-4 py-2 font-body text-sm"
+          />
+        </div>
+
+        <div>
+          <label for="cart-notes" class="block font-body text-xs font-bold text-[#4A2C1D] mb-1">
+            Notas Adicionales (Opcional)
+          </label>
+          <input
+            id="cart-notes"
+            type="text"
+            placeholder="Ej: Bastante ají pollero de la casa, servilletas extra"
+            class="w-full rounded-xl border border-[#4A2C1D]/20 bg-white px-4 py-2 font-body text-sm"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drawer Footer: Totals and WhatsApp CTA -->
+  <div id="cart-footer" class="hidden border-t border-[#4A2C1D]/15 bg-white p-6 shadow-inner">
+    <div class="space-y-1.5 font-body text-sm">
+      <div class="flex justify-between text-[#4A2C1D]/80">
+        <span>Subtotal productos:</span>
+        <span id="summary-subtotal" class="font-bold text-[#1A1A1A]">S/ 0.00</span>
+      </div>
+      <div class="flex justify-between text-[#4A2C1D]/80">
+        <span>Delivery (<span id="summary-district-name">Pueblo Libre</span>):</span>
+        <span id="summary-delivery" class="font-bold text-[#1A1A1A]">S/ 4.00</span>
+      </div>
+      <div class="flex justify-between text-lg font-bold text-[#1A1A1A] pt-2 border-t border-[#4A2C1D]/10">
+        <span class="font-display text-xl">TOTAL A PAGAR:</span>
+        <span id="summary-total" class="font-display text-2xl text-[#C41E0A]">S/ 0.00</span>
+      </div>
+    </div>
+
+    <button
+      id="send-whatsapp-order-btn"
+      type="button"
+      class="btn-brasa mt-5 flex w-full items-center justify-center gap-2 rounded-full py-4 font-display text-lg font-bold text-[#FFF8E8] shadow-[0_12px_30px_rgba(196,30,10,0.4)]"
+    >
+      <span>📲</span> Enviar Pedido por WhatsApp
+    </button>
+    <p class="mt-2 text-center font-body text-[11px] text-[#4A2C1D]/70">
+      Tu pedido llegará formateado a nuestro WhatsApp oficial para confirmación inmediata.
+    </p>
+  </div>
+</aside>
+
+<!-- Toast notification element -->
+<div
+  id="cart-toast"
+  class="fixed top-6 left-1/2 z-[70] -translate-x-1/2 flex items-center gap-3 rounded-full bg-[#1A1A1A] px-5 py-3 text-[#FFF8E8] shadow-2xl transition-all duration-300 -translate-y-20 opacity-0 pointer-events-none"
+  role="alert"
+>
+  <span class="text-xl">🔥</span>
+  <span id="cart-toast-msg" class="font-body text-sm font-bold">Plato agregado</span>
+</div>
+
+<script>
+  interface CartItem {
+    id: string;
+    name: string;
+    priceNum: number;
+    qty: number;
+    ensalada?: "Fresca" | "Cocida";
+    allowsEnsalada?: boolean;
+  }
+
+  const STORAGE_KEY = "lena_cart_v1";
+
+  class CartManager {
+    items: CartItem[] = [];
+
+    constructor() {
+      this.load();
+    }
+
+    load() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          this.items = JSON.parse(raw);
+        }
+      } catch {
+        this.items = [];
+      }
+    }
+
+    save() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items));
+      } catch {}
+      this.updateUI();
+    }
+
+    addItem(item: { id: string; name: string; priceNum: number; allowsEnsalada?: boolean }) {
+      const existing = this.items.find(
+        (i) => i.id === item.id && (!item.allowsEnsalada || i.ensalada === "Fresca")
+      );
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        this.items.push({
+          id: item.id,
+          name: item.name,
+          priceNum: item.priceNum,
+          qty: 1,
+          ensalada: item.allowsEnsalada ? "Fresca" : undefined,
+          allowsEnsalada: item.allowsEnsalada,
+        });
+      }
+      this.save();
+      this.showToast(`«${item.name}» agregado al pedido`);
+    }
+
+    updateQty(index: number, delta: number) {
+      if (this.items[index]) {
+        this.items[index].qty += delta;
+        if (this.items[index].qty <= 0) {
+          this.items.splice(index, 1);
+        }
+        this.save();
+      }
+    }
+
+    setEnsalada(index: number, type: "Fresca" | "Cocida") {
+      if (this.items[index]) {
+        this.items[index].ensalada = type;
+        this.save();
+      }
+    }
+
+    clear() {
+      this.items = [];
+      this.save();
+    }
+
+    getSubtotal(): number {
+      return this.items.reduce((sum, item) => sum + item.priceNum * item.qty, 0);
+    }
+
+    getTotalCount(): number {
+      return this.items.reduce((sum, item) => sum + item.qty, 0);
+    }
+
+    showToast(msg: string) {
+      const toast = document.getElementById("cart-toast");
+      const toastMsg = document.getElementById("cart-toast-msg");
+      if (!toast || !toastMsg) return;
+
+      toastMsg.textContent = msg;
+      toast.classList.remove("-translate-y-20", "opacity-0", "pointer-events-none");
+      toast.classList.add("translate-y-0", "opacity-100");
+
+      setTimeout(() => {
+        toast.classList.remove("translate-y-0", "opacity-100");
+        toast.classList.add("-translate-y-20", "opacity-0", "pointer-events-none");
+      }, 2500);
+    }
+
+    updateUI() {
+      const pill = document.getElementById("floating-cart-pill");
+      const badgeCount = document.getElementById("cart-badge-count");
+      const badgeTotal = document.getElementById("cart-badge-total");
+      const emptyState = document.getElementById("cart-empty-state");
+      const itemsContainer = document.getElementById("cart-items-container");
+      const footer = document.getElementById("cart-footer");
+      const itemsList = document.getElementById("cart-items-list");
+      const subtotalEl = document.getElementById("summary-subtotal");
+      const totalEl = document.getElementById("summary-total");
+      const districtSelect = document.getElementById("cart-customer-district") as HTMLSelectElement | null;
+      const deliveryEl = document.getElementById("summary-delivery");
+      const districtNameEl = document.getElementById("summary-district-name");
+
+      const count = this.getTotalCount();
+      const subtotal = this.getSubtotal();
+
+      // Floating trigger pill visibility
+      if (pill && badgeCount && badgeTotal) {
+        if (count > 0) {
+          pill.classList.remove("translate-y-28", "opacity-0", "pointer-events-none");
+          pill.classList.add("translate-y-0", "opacity-100", "pointer-events-auto");
+          badgeCount.textContent = String(count);
+          badgeTotal.textContent = `S/ ${subtotal}`;
+        } else {
+          pill.classList.add("translate-y-28", "opacity-0", "pointer-events-none");
+          pill.classList.remove("translate-y-0", "opacity-100", "pointer-events-auto");
+        }
+      }
+
+      // Drawer items render
+      if (emptyState && itemsContainer && footer && itemsList) {
+        if (count === 0) {
+          emptyState.classList.remove("hidden");
+          itemsContainer.classList.add("hidden");
+          footer.classList.add("hidden");
+          itemsList.innerHTML = "";
+        } else {
+          emptyState.classList.add("hidden");
+          itemsContainer.classList.remove("hidden");
+          footer.classList.remove("hidden");
+
+          // Build HTML for items
+          itemsList.innerHTML = this.items
+            .map((item, idx) => {
+              const itemTotal = item.priceNum * item.qty;
+              return `
+              <div class="flex flex-col gap-2 rounded-2xl border border-[#4A2C1D]/15 bg-white p-3.5 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <div class="font-display font-bold text-base text-[#1A1A1A]">${item.name}</div>
+                  <div class="font-display font-bold text-base text-[#C41E0A]">S/ ${itemTotal}</div>
+                </div>
+
+                ${
+                  item.allowsEnsalada
+                    ? `
+                  <div class="flex items-center gap-2 text-xs font-body text-[#4A2C1D]/80 pt-1">
+                    <span class="font-bold">Ensalada:</span>
+                    <button type="button" data-salad-idx="${idx}" data-salad-type="Fresca" class="rounded-lg px-2.5 py-1 font-bold transition-colors ${
+                      item.ensalada === "Fresca" ? "bg-[#C41E0A] text-[#FFF8E8]" : "bg-[#FFF8E8] text-[#1A1A1A] border border-[#4A2C1D]/20"
+                    }">Clásica Fresca</button>
+                    <button type="button" data-salad-idx="${idx}" data-salad-type="Cocida" class="rounded-lg px-2.5 py-1 font-bold transition-colors ${
+                      item.ensalada === "Cocida" ? "bg-[#C41E0A] text-[#FFF8E8]" : "bg-[#FFF8E8] text-[#1A1A1A] border border-[#4A2C1D]/20"
+                    }">Cocida c/ Beterraga</button>
+                  </div>
+                `
+                    : ""
+                }
+
+                <div class="flex items-center justify-between pt-1 border-t border-[#4A2C1D]/10">
+                  <span class="font-body text-xs text-[#4A2C1D]/60">S/ ${item.priceNum} c/u</span>
+                  <div class="flex items-center gap-2">
+                    <button type="button" data-qty-idx="${idx}" data-qty-delta="-1" class="grid h-7 w-7 place-items-center rounded-full bg-[#FFF8E8] border border-[#4A2C1D]/20 text-sm font-bold text-[#1A1A1A] hover:bg-[#C41E0A] hover:text-white transition-colors">-</button>
+                    <span class="font-body text-sm font-bold w-4 text-center">${item.qty}</span>
+                    <button type="button" data-qty-idx="${idx}" data-qty-delta="1" class="grid h-7 w-7 place-items-center rounded-full bg-[#FFF8E8] border border-[#4A2C1D]/20 text-sm font-bold text-[#1A1A1A] hover:bg-[#C41E0A] hover:text-white transition-colors">+</button>
+                  </div>
+                </div>
+              </div>
+            `;
+            })
+            .join("");
+
+          // Delivery and Total calculate
+          let deliveryPrice = 4;
+          let districtName = "Pueblo Libre";
+          if (districtSelect) {
+            const opt = districtSelect.selectedOptions[0];
+            if (opt) {
+              deliveryPrice = Number(opt.dataset.price || 4);
+              districtName = opt.value;
+            }
+          }
+
+          if (subtotalEl) subtotalEl.textContent = `S/ ${subtotal.toFixed(2)}`;
+          if (deliveryEl) deliveryEl.textContent = deliveryPrice === 0 ? "¡Gratis!" : `S/ ${deliveryPrice.toFixed(2)}`;
+          if (districtNameEl) districtNameEl.textContent = districtName;
+          if (totalEl) totalEl.textContent = `S/ ${(subtotal + deliveryPrice).toFixed(2)}`;
+        }
+      }
+    }
+  }
+
+  function initCartLogic() {
+    const cart = new CartManager();
+    (window as any).LenaCart = cart;
+
+    const drawer = document.getElementById("cart-drawer");
+    const backdrop = document.getElementById("cart-backdrop");
+    const openBtn = document.getElementById("open-cart-btn");
+    const closeBtn = document.getElementById("close-cart-btn");
+    const startShopBtn = document.getElementById("start-shopping-btn");
+    const clearBtn = document.getElementById("clear-cart-btn");
+    const districtSelect = document.getElementById("cart-customer-district") as HTMLSelectElement | null;
+    const paymentRadios = document.querySelectorAll<HTMLInputElement>('input[name="cart-payment"]');
+    const cashContainer = document.getElementById("cash-change-container");
+    const whatsappBtn = document.getElementById("send-whatsapp-order-btn");
+    const itemsList = document.getElementById("cart-items-list");
+
+    const openDrawer = () => {
+      if (!drawer || !backdrop) return;
+      drawer.classList.remove("translate-x-full");
+      backdrop.classList.remove("opacity-0", "pointer-events-none");
+      backdrop.classList.add("opacity-100", "pointer-events-auto");
+      cart.updateUI();
+    };
+
+    const closeDrawer = () => {
+      if (!drawer || !backdrop) return;
+      drawer.classList.add("translate-x-full");
+      backdrop.classList.remove("opacity-100", "pointer-events-auto");
+      backdrop.classList.add("opacity-0", "pointer-events-none");
+    };
+
+    openBtn?.addEventListener("click", openDrawer);
+    closeBtn?.addEventListener("click", closeDrawer);
+    backdrop?.addEventListener("click", closeDrawer);
+    startShopBtn?.addEventListener("click", () => {
+      closeDrawer();
+      document.getElementById("carta")?.scrollIntoView({ behavior: "smooth" });
+    });
+    clearBtn?.addEventListener("click", () => cart.clear());
+
+    districtSelect?.addEventListener("change", () => cart.updateUI());
+
+    paymentRadios.forEach((r) => {
+      r.addEventListener("change", () => {
+        if (cashContainer) {
+          if (r.value === "Efectivo" && r.checked) {
+            cashContainer.classList.remove("hidden");
+          } else {
+            cashContainer.classList.add("hidden");
+          }
+        }
+      });
+    });
+
+    // Delegate item clicks (Qty and Salad change)
+    itemsList?.addEventListener("click", (e) => {
+      const target = (e.target as HTMLElement).closest("button");
+      if (!target) return;
+
+      if (target.dataset.qtyIdx !== undefined) {
+        const idx = Number(target.dataset.qtyIdx);
+        const delta = Number(target.dataset.qtyDelta);
+        cart.updateQty(idx, delta);
+      } else if (target.dataset.saladIdx !== undefined) {
+        const idx = Number(target.dataset.saladIdx);
+        const type = target.dataset.saladType as "Fresca" | "Cocida";
+        cart.setEnsalada(idx, type);
+      }
+    });
+
+    // Send WhatsApp Order Handler
+    whatsappBtn?.addEventListener("click", () => {
+      const nameInput = document.getElementById("cart-customer-name") as HTMLInputElement | null;
+      const addrInput = document.getElementById("cart-customer-address") as HTMLInputElement | null;
+      const notesInput = document.getElementById("cart-notes") as HTMLInputElement | null;
+      const cashInput = document.getElementById("cart-cash-amount") as HTMLInputElement | null;
+
+      const name = nameInput?.value.trim() || "";
+      const address = addrInput?.value.trim() || "";
+      const district = districtSelect?.value || "Pueblo Libre";
+      const notes = notesInput?.value.trim() || "";
+
+      let payment = "Yape";
+      document.querySelectorAll<HTMLInputElement>('input[name="cart-payment"]').forEach((r) => {
+        if (r.checked) payment = r.value;
+      });
+
+      if (!name) {
+        alert("Por favor ingresa tu nombre para identificar el pedido.");
+        nameInput?.focus();
+        return;
+      }
+
+      if (!address && district !== "Recojo en Tienda (Av. Sucre 1998)") {
+        alert("Por favor ingresa tu dirección exacta de entrega.");
+        addrInput?.focus();
+        return;
+      }
+
+      const opt = districtSelect?.selectedOptions[0];
+      const deliveryCost = Number(opt?.dataset.price || 4);
+      const subtotal = cart.getSubtotal();
+      const total = subtotal + deliveryCost;
+
+      // Format WhatsApp order text
+      const orderLines = cart.items
+        .map((item) => {
+          let line = `• ${item.qty}x ${item.name} (S/ ${item.priceNum * item.qty})`;
+          if (item.ensalada) {
+            line += `\n  - Ensalada: ${item.ensalada}`;
+          }
+          return line;
+        })
+        .join("\n");
+
+      let paymentDetail = payment;
+      if (payment === "Efectivo" && cashInput?.value.trim()) {
+        paymentDetail += ` (${cashInput.value.trim()})`;
+      }
+
+      const msg = `🍗 *NUEVO PEDIDO — LA LEÑA POLLEÍA* 🍗
+━━━━━━━━━━━━━━━━━━━━
+👤 *Cliente:* ${name}
+📍 *Distrito / Modalidad:* ${district}
+🏠 *Dirección:* ${address || "Recojo en local"}
+${notes ? `📝 *Notas:* ${notes}\n` : ""}━━━━━━━━━━━━━━━━━━━━
+📋 *DETALLE DEL PEDIDO:*
+${orderLines}
+━━━━━━━━━━━━━━━━━━━━
+📦 *Subtotal:* S/ ${subtotal.toFixed(2)}
+🛵 *Delivery:* ${deliveryCost === 0 ? "Gratis (Recojo)" : `S/ ${deliveryCost.toFixed(2)}`}
+💰 *TOTAL A PAGAR:* S/ ${total.toFixed(2)}
+💳 *Medio de Pago:* ${paymentDetail}
+━━━━━━━━━━━━━━━━━━━━
+¡Hola La Leña! Deseo confirmar este pedido por favor. 🔥`;
+
+      const encoded = encodeURIComponent(msg);
+      const waUrl = `https://wa.me/51999999999?text=${encoded}`;
+      window.open(waUrl, "_blank");
+    });
+
+    // Initial render
+    cart.updateUI();
+  }
+
+  document.addEventListener("astro:page-load", initCartLogic);
+</script>

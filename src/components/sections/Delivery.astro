@@ -1,14 +1,5 @@
 ---
-const ZONAS = [
-  "Pueblo Libre",
-  "Magdalena",
-  "Jesús María",
-  "San Miguel",
-  "Miraflores",
-  "Lince",
-  "Breña",
-  "Surquillo",
-];
+import { DISTRICT_ZONES } from "../../data/menu";
 ---
 
 <section
@@ -48,20 +39,24 @@ const ZONAS = [
         </div>
       </div>
 
-      <div class="delivery-anim hidden md:block">
-        <div class="rounded-3xl bg-[#1A1A1A]/20 p-8 backdrop-blur" aria-label="Zonas de cobertura">
-          <div class="font-display text-3xl font-bold">Zonas de reparto</div>
+      <div class="delivery-anim block">
+        <div class="rounded-3xl bg-[#1A1A1A]/30 p-6 sm:p-8 backdrop-blur" aria-label="Zonas de cobertura">
+          <div class="font-display text-2xl sm:text-3xl font-bold">Zonas de reparto & Tarifas</div>
           <div class="mt-4 flex flex-wrap gap-2">
             {
-              ZONAS.map((z) => (
-                <span class="rounded-full bg-[#FFF8E8]/15 px-4 py-1.5 font-body text-sm font-medium">
-                  {z}
+              DISTRICT_ZONES.map((z) => (
+                <span class="rounded-full bg-[#FFF8E8]/15 px-3.5 py-1.5 font-body text-xs sm:text-sm font-medium flex items-center gap-1.5">
+                  <span>{z.name}</span>
+                  <span class="text-[#FFB703] font-bold">
+                    {z.price === 0 ? "· Gratis" : `· S/ ${z.price}`}
+                  </span>
                 </span>
               ))
             }
           </div>
-          <div class="mt-6 font-body text-sm text-[#FFF8E8]/80">
-            Horario delivery: Lun–Dom · 11:00 am – 11:00 pm
+          <div class="mt-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-body text-xs sm:text-sm text-[#FFF8E8]/80 border-t border-white/10 pt-4">
+            <span>⏱️ Promedio de entrega: 30 a 40 minutos</span>
+            <span>📍 Local: Av. Sucre 1998, Pueblo Libre</span>
           </div>
         </div>
       </div>
