@@ -1,0 +1,139 @@
+---
+const BUILDINGS = [
+  [20, 20, 120, 90],
+  [160, 20, 150, 90],
+  [330, 20, 170, 90],
+  [20, 130, 120, 110],
+  [330, 130, 80, 110],
+  [430, 130, 70, 110],
+  [20, 260, 120, 120],
+  [160, 260, 150, 120],
+  [330, 260, 170, 120],
+];
+---
+
+<section id="local" class="glow-cream relative bg-[#FFF8E8] py-24 md:py-32">
+  <div class="mx-auto max-w-[1400px] px-5 md:px-10">
+    <div class="mb-12">
+      <p class="font-body text-sm font-bold uppercase tracking-[0.3em] text-[#C41E0A]">
+        Ven a comer con nosotros
+      </p>
+      <h2
+        class="mt-3 font-display text-[clamp(2.4rem,6vw,68px)] font-bold leading-[0.95] text-[#1A1A1A]"
+      >
+        Nuestro local<br />en Pueblo Libre.
+      </h2>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-[0.9fr_1.1fr]">
+      <div
+        class="local-anim flex flex-col justify-between rounded-3xl bg-[#1A1A1A] p-9 text-[#FFF8E8]"
+      >
+        <div>
+          <div class="font-body text-xs font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+            Dirección
+          </div>
+          <div class="mt-2 font-display text-3xl font-bold leading-tight">
+            Av. Sucre 1998,<br />Pueblo Libre, Lima
+          </div>
+          <div class="mt-8 font-body text-xs font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+            Horario
+          </div>
+          <div class="mt-2 space-y-1 font-body text-lg">
+            <div class="flex justify-between border-b border-[#FFF8E8]/10 py-2">
+              <span>Lun – Jue</span><span>11:00 – 23:00</span>
+            </div>
+            <div class="flex justify-between border-b border-[#FFF8E8]/10 py-2">
+              <span>Vie – Sáb</span><span>11:00 – 00:00</span>
+            </div>
+            <div class="flex justify-between py-2">
+              <span>Domingo</span><span>11:00 – 22:00</span>
+            </div>
+          </div>
+        </div>
+        <a
+          href="https://maps.google.com/?q=Av.+Sucre+1998,+Pueblo+Libre,+Lima"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-brasa mt-8 inline-flex items-center justify-center rounded-full px-7 py-4 font-body text-base font-bold"
+          aria-label="Ver cómo llegar en Google Maps"
+        >
+          <span class="flame-ico mr-2" aria-hidden="true">🔥</span> Cómo llegar
+        </a>
+      </div>
+
+      <div
+        class="local-anim overflow-hidden rounded-3xl border border-[#4A2C1D]/10 shadow-[0_20px_50px_rgba(74,44,29,.12)]"
+      >
+        <svg
+          viewBox="0 0 520 400"
+          class="h-full w-full"
+          preserveAspectRatio="xMidYMid slice"
+          aria-label="Mapa ilustrativo mostrando la ubicación de la pollería en Av. Sucre"
+        >
+          <rect width="520" height="400" fill="#F3E7C9"></rect>
+          {
+            BUILDINGS.map((b) => (
+              <rect x={b[0]} y={b[1]} width={b[2]} height={b[3]} rx="8" fill="#E8D9B5" />
+            ))
+          }
+          <circle cx="235" cy="185" r="46" fill="#B7C98A"></circle>
+          <circle cx="210" cy="170" r="10" fill="#9BB36E"></circle>
+          <circle cx="255" cy="200" r="12" fill="#9BB36E"></circle>
+          <line x1="0" y1="120" x2="520" y2="250" stroke="#D9C39A" stroke-width="22"></line>
+          <line x1="150" y1="0" x2="150" y2="400" stroke="#FFF8E8" stroke-width="12"></line>
+          <line x1="320" y1="0" x2="320" y2="400" stroke="#FFF8E8" stroke-width="12"></line>
+          <line x1="0" y1="250" x2="520" y2="250" stroke="#FFF8E8" stroke-width="12"></line>
+          <text x="158" y="40" font-size="11" fill="#4A2C1D" font-family="Satoshi, sans-serif" font-weight="700">Av. Sucre</text>
+          <text x="330" y="40" font-size="11" fill="#4A2C1D" font-family="Satoshi, sans-serif" font-weight="700">Av. Brasil</text>
+          <text x="200" y="190" font-size="10" fill="#4A2C1D" font-family="Satoshi, sans-serif" font-weight="700">Parque</text>
+          <g transform="translate(262,176)">
+            <circle class="pin-ring" cx="0" cy="0" r="14" fill="#C41E0A"></circle>
+            <path d="M0 -34 C -16 -34, -22 -18, 0 6 C 22 -18, 16 -34, 0 -34 Z" fill="#C41E0A" stroke="#FFF8E8" stroke-width="3"></path>
+            <circle cx="0" cy="-22" r="6" fill="#FFB703"></circle>
+          </g>
+          <text x="276" y="150" font-size="13" fill="#C41E0A" font-family="Clash Display, sans-serif" font-weight="800">LA LEÑA 🔥</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import type gsap from "gsap";
+  let gsapCtx: ReturnType<typeof gsap.context> | undefined;
+
+  async function initLocalAnimations() {
+    const section = document.getElementById("local");
+    if (!section) return;
+
+    const { default: gsap } = await import("gsap");
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsapCtx = gsap.context(() => {
+      gsap.from(".local-anim", {
+        y: 46,
+        opacity: 0,
+        duration: 0.9,
+        ease: "back.out(1.5)",
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    }, section);
+  }
+
+  function cleanupLocal() {
+    if (gsapCtx) {
+      gsapCtx.revert();
+    }
+  }
+
+  document.addEventListener("astro:page-load", initLocalAnimations);
+  document.addEventListener("astro:before-preparation", cleanupLocal, { once: true });
+</script>

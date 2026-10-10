@@ -1,0 +1,103 @@
+---
+import { STATS, TESTIMONIOS } from "../../data/menu";
+---
+
+<section
+  id="social-proof-section"
+  class="glow-cream relative bg-[#FFF8E8] py-20 md:py-28"
+>
+  <div class="mx-auto max-w-[1400px] px-5 md:px-10">
+    <div class="grid items-end gap-10 md:grid-cols-[1.1fr_0.9fr]">
+      <div>
+        <p class="font-body text-sm font-bold uppercase tracking-[0.3em] text-[#C41E0A]">
+          Tradición que se prueba
+        </p>
+        <h2
+          class="mt-4 font-display text-[clamp(2.4rem,6vw,64px)] font-bold leading-[0.95] text-[#1A1A1A]"
+        >
+          Desde <span class="text-[#C41E0A]">1998</span>,{' '}<br />
+          la brasa no miente.
+        </h2>
+      </div>
+      <p class="font-body text-lg leading-relaxed text-[#4A2C1D]">
+        Empezamos con un solo horno de ladrillo en Pueblo Libre y una
+        receta familiar. Hoy seguimos marinando el pollo 24 horas y
+        encendiendo el carbón a mano, todos los días. Sin atajos, sin
+        humo líquido. Solo leña, tiempo y cariño.
+      </p>
+    </div>
+
+    <div class="mt-14 grid grid-cols-2 gap-4 md:grid-cols-4">
+      {
+        STATS.map((s) => (
+          <div class="stat-card rounded-3xl border border-[#4A2C1D]/12 bg-white/60 p-7 shadow-[0_10px_30px_rgba(74,44,29,.06)]">
+            <div class="stat-n font-display text-5xl font-bold text-[#C41E0A] md:text-6xl">
+              {s.n}
+            </div>
+            <div class="mt-3 font-body text-sm font-medium leading-snug text-[#4A2C1D]">
+              {s.l}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Testimonial marquee (0 KB JS required for animation) -->
+    <div class="mt-12 overflow-hidden rounded-3xl bg-[#1A1A1A] py-5" aria-hidden="true">
+      <div class="marquee">
+        {
+          [0, 1].map(() => (
+            <div class="flex shrink-0 items-center gap-10 pr-10">
+              {TESTIMONIOS.map((t) => (
+                <span class="flex items-center gap-10 font-body text-base font-medium text-[#FFF8E8]/90">
+                  {t}
+                  <span class="text-[#FFB703]">★</span>
+                </span>
+              ))}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import type gsap from "gsap";
+  let gsapCtx: ReturnType<typeof gsap.context> | undefined;
+
+  async function initSocialProofAnimations() {
+    const section = document.getElementById("social-proof-section");
+    if (!section) return;
+
+    const { default: gsap } = await import("gsap");
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsapCtx = gsap.context(() => {
+      gsap.from(".stat-card", {
+        y: 46,
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.9,
+        ease: "back.out(1.5)",
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    }, section);
+  }
+
+  function cleanupSocialProof() {
+    if (gsapCtx) {
+      gsapCtx.revert();
+    }
+  }
+
+  document.addEventListener("astro:page-load", initSocialProofAnimations);
+  document.addEventListener("astro:before-preparation", cleanupSocialProof, { once: true });
+</script>

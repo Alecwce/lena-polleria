@@ -1,0 +1,142 @@
+---
+import { Picture } from "astro:assets";
+import { CARTA } from "../../data/menu";
+---
+
+<section
+  id="carta-section"
+  class="glow-dark relative h-screen w-full overflow-hidden bg-[#1A1A1A]"
+>
+  <div
+    id="carta-track"
+    class="flex h-full items-stretch gap-8 pl-[6vw] pr-[10vw] will-change-transform"
+    style="width: max-content;"
+  >
+    <div class="flex w-[80vw] shrink-0 flex-col justify-center md:w-[42vw]">
+      <p class="font-body text-sm font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+        La carta completa
+      </p>
+      <h2
+        class="mt-4 font-display text-[clamp(3rem,8vw,96px)] font-bold leading-[0.9] text-[#FFF8E8]"
+      >
+        Desliza<br />
+        por la <span class="text-[#C41E0A]">brasa</span> →
+      </h2>
+      <p class="mt-6 max-w-md font-body text-lg leading-relaxed text-[#FFF8E8]/70">
+        Tres familias, un mismo fuego: pollos a la brasa, broasters
+        crocantes y parrillas a la leña. Sigue scrolleando para explorar.
+      </p>
+    </div>
+
+    {
+      CARTA.map((group, gi) => (
+        <div class="flex shrink-0 items-center gap-6">
+          <div class="flex h-[60vh] w-[200px] shrink-0 flex-col justify-between rounded-3xl border border-[#FFF8E8]/10 bg-gradient-to-b from-[#C41E0A] to-[#7a1206] p-7 text-[#FFF8E8]">
+            <div>
+              <div class="font-display text-5xl font-bold opacity-30">0{gi + 1}</div>
+              <h3 class="mt-6 font-display text-4xl font-bold leading-none">{group.cat}</h3>
+            </div>
+            <p class="font-body text-sm font-medium leading-snug text-[#FFF8E8]/80">
+              {group.note}
+            </p>
+          </div>
+
+          {group.items.map((item) => (
+            <article class="dish-card group flex h-[64vh] w-[300px] shrink-0 flex-col overflow-hidden rounded-3xl bg-[#FFF8E8] shadow-[0_20px_50px_rgba(0,0,0,.4)] md:w-[340px]">
+              <div class="relative h-[55%] overflow-hidden">
+                <Picture
+                  src={item.img}
+                  formats={["avif", "webp"]}
+                  alt={`Plato de ${item.name}`}
+                  class="dish-img h-full w-full object-cover"
+                />
+                <div class="absolute right-3 top-3 rounded-full bg-[#1A1A1A] px-3 py-1 font-display text-sm font-bold text-[#FFB703]">
+                  {item.price}
+                </div>
+              </div>
+              <div class="flex flex-1 flex-col p-6">
+                <h4 class="font-display text-2xl font-bold leading-tight text-[#1A1A1A]">
+                  {item.name}
+                </h4>
+                <p class="mt-2 flex-1 font-body text-[15px] leading-relaxed text-[#4A2C1D]">
+                  {item.desc}
+                </p>
+                <div class="mt-4 flex items-center justify-between">
+                  <span class="font-body text-xs font-bold uppercase tracking-widest text-[#C41E0A]">
+                    {group.cat}
+                  </span>
+                  <button
+                    class="plus-btn grid h-9 w-9 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] font-bold border-none cursor-pointer"
+                    aria-label={`Añadir ${item.name} al pedido`}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+
+  <div
+    class="absolute bottom-8 left-[6vw] right-[6vw] z-10 h-1.5 overflow-hidden rounded-full bg-[#FFF8E8]/15"
+  >
+    <div
+      id="carta-progress-bar"
+      class="h-full origin-left rounded-full bg-[#FFB703]"
+      style="transform: scaleX(0);"
+    >
+    </div>
+  </div>
+</section>
+
+<script>
+  import type gsap from "gsap";
+  import type { ScrollTrigger } from "gsap/ScrollTrigger";
+  let gsapCtx: ReturnType<typeof gsap.context> | undefined;
+
+  async function initCartaScroll() {
+    const section = document.getElementById("carta-section");
+    const track = document.getElementById("carta-track");
+    const bar = document.getElementById("carta-progress-bar");
+
+    if (!section || !track || !bar) return;
+
+    // Dynamically import GSAP & ScrollTrigger
+    const { default: gsap } = await import("gsap");
+    const { ScrollTrigger: ST } = await import("gsap/ScrollTrigger");
+
+    gsap.registerPlugin(ST);
+
+    gsapCtx = gsap.context(() => {
+      const getScroll = () => track.scrollWidth - window.innerWidth;
+
+      gsap.to(track, {
+        x: () => -getScroll(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => "+=" + getScroll(),
+          pin: true,
+          scrub: 0.8,
+          invalidateOnRefresh: true,
+          onUpdate: (self: ScrollTrigger) => {
+            if (bar) bar.style.transform = `scaleX(${self.progress})`;
+          },
+        },
+      });
+    }, section);
+  }
+
+  function cleanupCarta() {
+    if (gsapCtx) {
+      gsapCtx.revert();
+    }
+  }
+
+  document.addEventListener("astro:page-load", initCartaScroll);
+  document.addEventListener("astro:before-preparation", cleanupCarta, { once: true });
+</script>

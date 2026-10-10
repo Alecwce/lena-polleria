@@ -1,0 +1,24 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Página no encontrada · La Leña"
+  description="La página que buscas ha sido consumida por las brasas de nuestro horno artesanal. Vuelve a nuestro menú de pollo a la brasa, parrillas y broaster."
+>
+  <main class="h-screen w-full flex flex-col justify-center items-center bg-[#1A1A1A] text-[#FFF8E8] px-5 text-center">
+    <div class="text-9xl mb-6 select-none" aria-hidden="true">🔥💨</div>
+    <h1 class="font-display text-5xl font-bold leading-tight mb-4">
+      Esta página se hizo cenizas.
+    </h1>
+    <p class="font-body text-lg text-[#FFF8E8]/70 max-w-md mb-8">
+      El enlace que seguiste podría haber cambiado o sido devorado por el fuego lento de algarrobo.
+    </p>
+    <a
+      href="/"
+      class="btn-brasa rounded-full px-8 py-4 font-body text-base font-bold shadow-[0_12px_30px_rgba(196,30,10,0.35)]"
+    >
+      Volver al inicio
+    </a>
+  </main>
+</BaseLayout>

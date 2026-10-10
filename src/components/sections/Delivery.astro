@@ -1,0 +1,178 @@
+---
+const ZONAS = [
+  "Pueblo Libre",
+  "Magdalena",
+  "Jesús María",
+  "San Miguel",
+  "Miraflores",
+  "Lince",
+  "Breña",
+  "Surquillo",
+];
+---
+
+<section
+  id="delivery"
+  class="glow-dark relative overflow-hidden bg-[#C41E0A] py-24 text-[#FFF8E8] md:py-28"
+>
+  <div class="mx-auto max-w-[1400px] px-5 md:px-10">
+    <div class="grid items-center gap-10 md:grid-cols-[1.2fr_0.8fr]">
+      <div class="delivery-anim">
+        <p class="font-body text-sm font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+          Delivery caliente
+        </p>
+        <h2 class="mt-4 font-display text-[clamp(2.6rem,7vw,80px)] font-bold leading-[0.92]">
+          ¿Antojo de<br />brasa? Llega<br />en 30 min.
+        </h2>
+        <p class="mt-6 max-w-md font-body text-lg leading-relaxed text-[#FFF8E8]/90">
+          Pedimos al fuego cuando tú pides. Si no llegamos en 30 minutos,
+          la próxima va por la casa. Así de seguros estamos 🔥
+        </p>
+        <div class="mt-9 flex flex-wrap items-center gap-4">
+          <a
+            href="https://wa.me/51999999999"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="rounded-full bg-[#FFB703] px-8 py-4 font-body text-base font-bold text-[#1A1A1A] shadow-[0_12px_30px_rgba(0,0,0,0.3)] transition-transform hover:-translate-y-1 inline-flex items-center"
+            aria-label="Pedir delivery por WhatsApp"
+          >
+            🛵 Pedir por WhatsApp
+          </a>
+          <a
+            href="tel:015551998"
+            class="rounded-full border-2 border-[#FFF8E8]/50 px-8 py-4 font-body text-base font-bold text-[#FFF8E8] transition-colors hover:bg-[#FFF8E8] hover:text-[#C41E0A]"
+            aria-label="Llamar por teléfono al (01) 555-1998"
+          >
+            (01) 555-1998
+          </a>
+        </div>
+      </div>
+
+      <div class="delivery-anim hidden md:block">
+        <div class="rounded-3xl bg-[#1A1A1A]/20 p-8 backdrop-blur" aria-label="Zonas de cobertura">
+          <div class="font-display text-3xl font-bold">Zonas de reparto</div>
+          <div class="mt-4 flex flex-wrap gap-2">
+            {
+              ZONAS.map((z) => (
+                <span class="rounded-full bg-[#FFF8E8]/15 px-4 py-1.5 font-body text-sm font-medium">
+                  {z}
+                </span>
+              ))
+            }
+          </div>
+          <div class="mt-6 font-body text-sm text-[#FFF8E8]/80">
+            Horario delivery: Lun–Dom · 11:00 am – 11:00 pm
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Road and motorcycle animation container -->
+  <div id="delivery-road" class="relative mt-16 h-40 w-full">
+    <div class="absolute bottom-0 left-0 right-0 h-16 bg-[#1A1A1A]/30" aria-hidden="true"></div>
+    <div class="road-dash absolute bottom-7 left-0 right-0 h-1.5" aria-hidden="true"></div>
+    <div class="moto absolute bottom-6 left-0">
+      <svg
+        viewBox="0 0 220 140"
+        class="w-44 drop-shadow-[0_10px_20px_rgba(0,0,0,.4)]"
+        aria-hidden="true"
+      >
+        <g class="speed-lines" stroke="#FFB703" stroke-width="4" stroke-linecap="round">
+          <line x1="-30" y1="60" x2="2" y2="60"></line>
+          <line x1="-44" y1="78" x2="-6" y2="78"></line>
+          <line x1="-22" y1="96" x2="6" y2="96"></line>
+        </g>
+        <rect x="6" y="32" width="66" height="54" rx="9" fill="#FFB703" stroke="#4A2C1D" stroke-width="4"></rect>
+        <text x="39" y="55" text-anchor="middle" font-size="13" font-weight="800" fill="#C41E0A" font-family="Clash Display, sans-serif">LA</text>
+        <text x="39" y="72" text-anchor="middle" font-size="13" font-weight="800" fill="#C41E0A" font-family="Clash Display, sans-serif">LEÑA</text>
+        <rect x="72" y="70" width="26" height="8" rx="4" fill="#4A2C1D"></rect>
+        <path d="M96 80 q8 -28 34 -28 l12 0 q-4 16 8 22 l14 6 q10 4 10 14 l-4 6 -78 0 z" fill="#FFF8E8" stroke="#4A2C1D" stroke-width="4"></path>
+        <rect x="98" y="44" width="36" height="11" rx="5" fill="#1A1A1A"></rect>
+        <path d="M140 50 l14 -14" stroke="#4A2C1D" stroke-width="6" stroke-linecap="round"></path>
+        <circle cx="156" cy="34" r="5" fill="#4A2C1D"></circle>
+        <circle cx="170" cy="74" r="6" fill="#FFB703" stroke="#4A2C1D" stroke-width="3"></circle>
+        <g class="wheel">
+          <circle cx="112" cy="110" r="20" fill="#1A1A1A"></circle>
+          <circle cx="112" cy="110" r="8" fill="#FFF8E8"></circle>
+          <path d="M112 94 v32 M96 110 h32" stroke="#4A2C1D" stroke-width="4"></path>
+        </g>
+        <g class="wheel">
+          <circle cx="178" cy="110" r="20" fill="#1A1A1A"></circle>
+          <circle cx="178" cy="110" r="8" fill="#FFF8E8"></circle>
+          <path d="M178 94 v32 M162 110 h32" stroke="#4A2C1D" stroke-width="4"></path>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<script>
+  import type gsap from "gsap";
+  let gsapCtx: ReturnType<typeof gsap.context> | undefined;
+
+  async function initDeliveryAnimations() {
+    const section = document.getElementById("delivery");
+    if (!section) return;
+
+    const { default: gsap } = await import("gsap");
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsapCtx = gsap.context(() => {
+      gsap.from(".delivery-anim", {
+        y: 46,
+        opacity: 0,
+        duration: 0.9,
+        ease: "back.out(1.5)",
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    }, section);
+  }
+
+  function initMotoObserver() {
+    const road = document.getElementById("delivery-road");
+    if (!road) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            road.classList.add("moto-running");
+          } else {
+            road.classList.remove("moto-running");
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(road);
+
+    document.addEventListener(
+      "astro:before-preparation",
+      () => {
+        observer.disconnect();
+      },
+      { once: true }
+    );
+  }
+
+  function cleanupDelivery() {
+    if (gsapCtx) {
+      gsapCtx.revert();
+    }
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    initDeliveryAnimations();
+    initMotoObserver();
+  });
+  document.addEventListener("astro:before-preparation", cleanupDelivery, { once: true });
+</script>

@@ -1,0 +1,152 @@
+---
+import { Picture } from "astro:assets";
+import { IMAGES } from "../../data/menu";
+
+const dotsCount = 22;
+const dots = Array.from({ length: dotsCount }, () => ({
+  left: 10 + Math.random() * 80,
+  delay: Math.random() * 4,
+  dur: 2.5 + Math.random() * 3,
+  size: 2 + Math.random() * 4,
+}));
+---
+
+<section
+  id="nosotros"
+  class="glow-dark relative overflow-hidden bg-[#4A2C1D] py-24 text-[#FFF8E8] md:py-32"
+>
+  <div class="mx-auto grid max-w-[1400px] items-center gap-14 px-5 md:grid-cols-2 md:px-10">
+    <div class="about-anim">
+      <p class="font-body text-sm font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+        Nuestra leña
+      </p>
+      <h2 class="mt-4 font-display text-[clamp(2.4rem,5.5vw,60px)] font-bold leading-[0.95]">
+        El secreto está<br />en el <span class="text-[#FFB703]">fuego lento</span>.
+      </h2>
+      <p class="mt-6 max-w-lg font-body text-lg leading-relaxed text-[#FFF8E8]/85">
+        Marinamos el pollo 24 horas con especias de la casa y lo colgamos
+        frente al carbón de algarrobo por más de una hora. El humo hace su
+        magia: sella los jugos, dora la piel y deja ese aroma inconfundible
+        que te recibe desde la puerta.
+      </p>
+      <ul class="mt-8 space-y-3 font-body text-base" aria-label="Nuestras garantías de calidad">
+        {
+          [
+            "Carbón 100% de algarrobo norteño",
+            "Marinado de 24 horas, sin conservantes",
+            "Horno de ladrillo artesanal",
+            "Ají y cremas hechos cada mañana",
+          ].map((t) => (
+            <li class="flex items-center gap-3">
+              <span
+                class="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-[#C41E0A] text-xs"
+                aria-hidden="true"
+              >
+                🔥
+              </span>
+              {t}
+            </li>
+          ))
+        }
+      </ul>
+      <div class="mt-9 font-display text-3xl font-bold italic text-[#FFB703]">
+        — Familia Leña, fundadores
+      </div>
+    </div>
+
+    <div class="about-anim relative">
+      <div
+        class="relative aspect-square overflow-hidden rounded-[32px] border-4 border-[#FFB703]/30 shadow-[0_30px_80px_rgba(0,0,0,.5)]"
+      >
+        <Picture
+          src={IMAGES.fuego}
+          formats={["avif", "webp"]}
+          alt="Leña ardiendo en el horno de la pollería"
+          class="h-full w-full object-cover"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-[#4A2C1D]/70 via-transparent to-transparent" />
+        
+        <!-- CSS-only flames (0 KB JS required for animation) -->
+        <div
+          class="absolute bottom-[18%] left-1/2 h-40 w-40 -translate-x-1/2"
+          aria-hidden="true"
+        >
+          <span class="flame flame-1"></span>
+          <span class="flame flame-2"></span>
+          <span class="flame flame-3"></span>
+        </div>
+
+        <!-- Pre-generated Embers (0 KB JS required for animation) -->
+        <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+          {
+            dots.map((d) => (
+              <span
+                class="ember absolute rounded-full"
+                style={{
+                  left: `${d.left}%`,
+                  bottom: "30%",
+                  width: `${d.size}px`,
+                  height: `${d.size}px`,
+                  background: "#FFB703",
+                  boxShadow: "0 0 8px #FFB703",
+                  animationDelay: `${d.delay}s`,
+                  animationDuration: `${d.dur}s`,
+                }}
+              />
+            ))
+          }
+        </div>
+
+        <div class="absolute bottom-6 left-6 right-6 flex items-end justify-between">
+          <div>
+            <div class="font-display text-5xl font-bold text-[#FFB703]">+1h</div>
+            <div class="font-body text-sm text-[#FFF8E8]/80">de brasa por pollo</div>
+          </div>
+          <div class="text-right">
+            <div class="font-display text-5xl font-bold text-[#FFB703]">24h</div>
+            <div class="font-body text-sm text-[#FFF8E8]/80">de marinado</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import type gsap from "gsap";
+  let gsapCtx: ReturnType<typeof gsap.context> | undefined;
+
+  async function initAboutAnimations() {
+    const section = document.getElementById("nosotros");
+    if (!section) return;
+
+    const { default: gsap } = await import("gsap");
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsapCtx = gsap.context(() => {
+      gsap.from(".about-anim", {
+        y: 46,
+        opacity: 0,
+        duration: 0.9,
+        ease: "back.out(1.5)",
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    }, section);
+  }
+
+  function cleanupAbout() {
+    if (gsapCtx) {
+      gsapCtx.revert();
+    }
+  }
+
+  document.addEventListener("astro:page-load", initAboutAnimations);
+  document.addEventListener("astro:before-preparation", cleanupAbout, { once: true });
+</script>

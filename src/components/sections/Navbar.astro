@@ -1,0 +1,113 @@
+---
+const NAV = [
+  { label: "Combos", href: "#combos" },
+  { label: "La Carta", href: "#carta" },
+  { label: "Nosotros", href: "#nosotros" },
+  { label: "Delivery", href: "#delivery" },
+  { label: "Local", href: "#local" },
+];
+---
+
+<header
+  id="main-header"
+  class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-transparent py-5"
+>
+  <div class="mx-auto flex max-w-[1400px] items-center justify-between px-5 md:px-10">
+    <a href="#top" class="flex items-center gap-2" aria-label="Volver arriba">
+      <span
+        class="grid h-10 w-10 place-items-center rounded-full bg-[#C41E0A] text-[#FFF8E8] text-lg shadow-[0_6px_18px_rgba(196,30,10,.4)]"
+      >
+        🔥
+      </span>
+      <span
+        id="logo-name"
+        class="font-display text-2xl font-bold tracking-tight transition-colors text-[#FFF8E8]"
+      >
+        LA&nbsp;LEÑA
+      </span>
+    </a>
+    <nav class="hidden items-center gap-7 lg:flex" aria-label="Navegación principal">
+      {
+        NAV.map((n) => (
+          <a
+            href={n.href}
+            class="nav-link font-body text-[15px] font-medium tracking-wide transition-colors hover:text-[#C41E0A] text-[#FFF8E8]/90"
+          >
+            {n.label}
+          </a>
+        ))
+      }
+    </nav>
+    <a
+      href="#delivery"
+      class="btn-brasa rounded-full px-5 py-2.5 font-body text-sm font-bold inline-flex"
+      aria-label="Pedir delivery ahora"
+    >
+      <span class="flame-ico mr-1" aria-hidden="true">🔥</span> Pedir ahora
+    </a>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    const header = document.getElementById("main-header");
+    const navLinks = document.querySelectorAll(".nav-link");
+    const logoName = document.getElementById("logo-name");
+
+    const onScroll = () => {
+      const scrolled = window.scrollY > 40;
+      if (header) {
+        if (scrolled) {
+          header.classList.remove("bg-transparent", "py-5");
+          header.classList.add(
+            "bg-[#FFF8E8]/95",
+            "backdrop-blur",
+            "shadow-[0_8px_30px_rgba(74,44,29,.12)]",
+            "py-3"
+          );
+        } else {
+          header.classList.remove(
+            "bg-[#FFF8E8]/95",
+            "backdrop-blur",
+            "shadow-[0_8px_30px_rgba(74,44,29,.12)]",
+            "py-3"
+          );
+          header.classList.add("bg-transparent", "py-5");
+        }
+      }
+
+      if (logoName) {
+        if (scrolled) {
+          logoName.classList.remove("text-[#FFF8E8]");
+          logoName.classList.add("text-[#1A1A1A]");
+        } else {
+          logoName.classList.remove("text-[#1A1A1A]");
+          logoName.classList.add("text-[#FFF8E8]");
+        }
+      }
+
+      navLinks.forEach((link) => {
+        if (scrolled) {
+          link.classList.remove("text-[#FFF8E8]/90");
+          link.classList.add("text-[#4A2C1D]");
+        } else {
+          link.classList.remove("text-[#4A2C1D]");
+          link.classList.add("text-[#FFF8E8]/90");
+        }
+      });
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    document.addEventListener(
+      "astro:before-preparation",
+      () => {
+        window.removeEventListener("scroll", onScroll);
+      },
+      { once: true }
+    );
+  }
+
+  document.addEventListener("astro:page-load", initHeader);
+</script>

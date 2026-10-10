@@ -1,0 +1,116 @@
+---
+import { Picture } from "astro:assets";
+import { COMBOS } from "../../data/menu";
+---
+
+<section id="combos" class="glow-cream relative bg-[#FFF8E8] pb-24 md:pb-32">
+  <div class="mx-auto max-w-[1400px] px-5 md:px-10">
+    <div class="mb-12 flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <p class="font-body text-sm font-bold uppercase tracking-[0.3em] text-[#C41E0A]">
+          Los combos de la casa
+        </p>
+        <h2
+          class="mt-3 font-display text-[clamp(2.4rem,6vw,68px)] font-bold leading-[0.95] text-[#1A1A1A]"
+        >
+          Armados para<br />comer en familia.
+        </h2>
+      </div>
+      <span class="rounded-full bg-[#4A2C1D] px-5 py-2 font-body text-sm font-bold text-[#FFB703]">
+        Precios con IGV 🔥
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-12">
+      {
+        COMBOS.map((c) => (
+          <article
+            class={
+              "combo-card group relative flex flex-col overflow-hidden rounded-3xl border border-[#4A2C1D]/10 bg-white " +
+              c.span +
+              (c.tall ? " md:min-h-[520px]" : " md:min-h-[420px]")
+            }
+          >
+            <div class={"relative overflow-hidden " + (c.tall ? "h-64 md:h-72" : "h-56")}>
+              <Picture
+                src={c.img}
+                formats={["avif", "webp"]}
+                alt={`Imagen ilustrativa de ${c.name}`}
+                class="combo-img h-full w-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/30 to-transparent" />
+              <div class="price-tag absolute right-4 top-4 -rotate-6 rounded-2xl bg-[#FFB703] px-4 py-2 text-center shadow-[0_8px_20px_rgba(74,44,29,.35)]">
+                <div class="font-body text-[10px] font-bold uppercase tracking-widest text-[#4A2C1D]">
+                  Desde
+                </div>
+                <div class="font-display text-2xl font-bold leading-none text-[#C41E0A]">
+                  {c.price}
+                </div>
+              </div>
+              <span class="absolute left-4 top-4 rounded-full bg-[#1A1A1A]/70 px-3 py-1 font-body text-xs font-bold uppercase tracking-widest text-[#FFF8E8] backdrop-blur">
+                {c.tag}
+              </span>
+            </div>
+
+            <div class="flex flex-1 flex-col p-7">
+              <h3 class="font-display text-3xl font-bold text-[#1A1A1A]">{c.name}</h3>
+              <p class="mt-3 flex-1 font-body text-base leading-relaxed text-[#4A2C1D]">
+                {c.desc}
+              </p>
+              <a
+                href="#delivery"
+                class="mt-6 inline-flex items-center gap-2 font-body text-sm font-bold text-[#C41E0A]"
+                aria-label={`Agregar el ${c.name} a tu pedido de delivery`}
+              >
+                Agregar al pedido
+                <span class="add-arrow" aria-hidden="true">
+                  →
+                </span>
+              </a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  import type gsap from "gsap";
+  let gsapCtx: ReturnType<typeof gsap.context> | undefined;
+
+  async function initCombosAnimations() {
+    const section = document.getElementById("combos");
+    if (!section) return;
+
+    const { default: gsap } = await import("gsap");
+    const { ScrollTrigger } = await import("gsap/ScrollTrigger");
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsapCtx = gsap.context(() => {
+      gsap.from(".combo-card", {
+        y: 46,
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.9,
+        ease: "back.out(1.5)",
+        stagger: 0.12,
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          once: true,
+        },
+      });
+    }, section);
+  }
+
+  function cleanupCombos() {
+    if (gsapCtx) {
+      gsapCtx.revert();
+    }
+  }
+
+  document.addEventListener("astro:page-load", initCombosAnimations);
+  document.addEventListener("astro:before-preparation", cleanupCombos, { once: true });
+</script>

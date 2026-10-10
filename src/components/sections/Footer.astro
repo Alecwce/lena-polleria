@@ -1,0 +1,97 @@
+---
+const NAV = [
+  { label: "Combos", href: "#combos" },
+  { label: "La Carta", href: "#carta" },
+  { label: "Nosotros", href: "#nosotros" },
+  { label: "Delivery", href: "#delivery" },
+  { label: "Local", href: "#local" },
+];
+---
+
+<footer class="relative overflow-hidden bg-[#1A1A1A] pt-20 text-[#FFF8E8]">
+  <div class="mx-auto max-w-[1400px] px-5 md:px-10">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="grid h-10 w-10 place-items-center rounded-full bg-[#C41E0A]">🔥</span>
+          <span class="font-display text-2xl font-bold">LA LEÑA</span>
+        </div>
+        <p class="mt-5 max-w-sm font-body text-base leading-relaxed text-[#FFF8E8]/70">
+          Pollería &amp; Brasas. El sabor a carbón de algarrobo que Lima
+          conoce desde 1998.
+        </p>
+      </div>
+      <div>
+        <div class="font-body text-xs font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+          Menú
+        </div>
+        <ul class="mt-4 space-y-2 font-body text-[#FFF8E8]/80">
+          {
+            NAV.map((n) => (
+              <li>
+                <a href={n.href} class="transition-colors hover:text-[#FFB703]">
+                  {n.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <div class="font-body text-xs font-bold uppercase tracking-[0.3em] text-[#FFB703]">
+          Contacto
+        </div>
+        <ul class="mt-4 space-y-2 font-body text-[#FFF8E8]/80">
+          <li>(01) 555-1998</li>
+          <li>hola@lalena.pe</li>
+          <li>Av. Sucre 1998, Pueblo Libre</li>
+          <li class="flex gap-3 pt-2 text-xl">
+            <a
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ir a nuestra página de Instagram"
+            >
+              📸
+            </a>
+            <a
+              href="https://tiktok.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ir a nuestro perfil de TikTok"
+            >
+              🎵
+            </a>
+            <a
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ir a nuestra página de Facebook"
+            >
+              👍
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Oversized branding footer strip -->
+    <div class="mt-14 select-none overflow-hidden" aria-hidden="true">
+      <div
+        class="font-display text-[clamp(4rem,20vw,220px)] font-bold leading-none text-transparent"
+        style="WebkitTextStroke: 1.5px rgba(255,248,232,.18);"
+      >
+        LA LEÑA
+      </div>
+    </div>
+
+    <div
+      class="flex flex-col items-center justify-between gap-3 border-t border-[#FFF8E8]/10 py-7 font-body text-sm text-[#FFF8E8]/60 md:flex-row"
+    >
+      <span>
+        © {new Date().getFullYear()} La Leña Pollería &amp; Brasas. Todos los derechos reservados.
+      </span>
+      <span>Hecho con brasa en Lima 🇵🇪</span>
+    </div>
+  </div>
+</footer>

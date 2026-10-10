@@ -1,0 +1,96 @@
+---
+import { ClientRouter } from "astro:transitions";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+// JSON-LD Local SEO Restaurant schema
+const restaurantSchema = {
+  "@context": "https://schema.org",
+  "@type": "Restaurant",
+  "name": "La Leña",
+  "image": "https://image.qwenlm.ai/public_source/93b7fd44-d088-40c2-9e99-7aec763aebbd/168be964d-1130-4451-9864-5736685710f0.png",
+  "url": "https://lalena.pe",
+  "telephone": "+5115551998",
+  "priceRange": "$$",
+  "servesCuisine": "Pollo a la Brasa, Parrillas, Broaster",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Av. Sucre 1998",
+    "addressLocality": "Pueblo Libre",
+    "addressRegion": "Lima",
+    "addressCountry": "PE"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -12.0792,
+    "longitude": -77.0601
+  },
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+      "opens": "11:00",
+      "closes": "23:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Friday", "Saturday"],
+      "opens": "11:00",
+      "closes": "00:00"
+    },
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Sunday"],
+      "opens": "11:00",
+      "closes": "22:00"
+    }
+  ]
+};
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <!-- SEO Meta Tags -->
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href="https://lalena.pe" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lalena.pe/" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="https://image.qwenlm.ai/public_source/93b7fd44-d088-40c2-9e99-7aec763aebbd/168be964d-1130-4451-9864-5736685710f0.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://lalena.pe/" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="https://image.qwenlm.ai/public_source/93b7fd44-d088-40c2-9e99-7aec763aebbd/168be964d-1130-4451-9864-5736685710f0.png" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(restaurantSchema)}></script>
+
+    <ClientRouter />
+  </head>
+  <body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <div class="noise" aria-hidden="true"></div>
+
+    <slot />
+  </body>
+</html>
