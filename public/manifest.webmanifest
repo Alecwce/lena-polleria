@@ -1,0 +1,17 @@
+{
+  "name": "La Leña — Pollería & Brasas",
+  "short_name": "La Leña",
+  "description": "El verdadero Pollo a la Brasa en Pueblo Libre, Lima. Pide delivery en 30 minutos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1A1A1A",
+  "theme_color": "#C41E0A",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

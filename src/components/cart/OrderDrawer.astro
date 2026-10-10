@@ -472,6 +472,24 @@ import { DISTRICT_ZONES } from "../../data/menu";
       backdrop.classList.add("opacity-0", "pointer-events-none");
     };
 
+    // Restore saved customer details from localStorage
+    const savedName = localStorage.getItem("lena_customer_name");
+    const savedAddr = localStorage.getItem("lena_customer_address");
+    const savedDist = localStorage.getItem("lena_customer_district");
+
+    const nameInput = document.getElementById("cart-customer-name") as HTMLInputElement | null;
+    const addrInput = document.getElementById("cart-customer-address") as HTMLInputElement | null;
+    if (nameInput && savedName) nameInput.value = savedName;
+    if (addrInput && savedAddr) addrInput.value = savedAddr;
+    if (districtSelect && savedDist) districtSelect.value = savedDist;
+
+    nameInput?.addEventListener("change", () => {
+      localStorage.setItem("lena_customer_name", nameInput.value.trim());
+    });
+    addrInput?.addEventListener("change", () => {
+      localStorage.setItem("lena_customer_address", addrInput.value.trim());
+    });
+
     openBtn?.addEventListener("click", openDrawer);
     closeBtn?.addEventListener("click", closeDrawer);
     backdrop?.addEventListener("click", closeDrawer);
@@ -481,7 +499,10 @@ import { DISTRICT_ZONES } from "../../data/menu";
     });
     clearBtn?.addEventListener("click", () => cart.clear());
 
-    districtSelect?.addEventListener("change", () => cart.updateUI());
+    districtSelect?.addEventListener("change", () => {
+      if (districtSelect) localStorage.setItem("lena_customer_district", districtSelect.value);
+      cart.updateUI();
+    });
 
     paymentRadios.forEach((r) => {
       r.addEventListener("change", () => {
@@ -539,6 +560,10 @@ import { DISTRICT_ZONES } from "../../data/menu";
         addrInput?.focus();
         return;
       }
+
+      localStorage.setItem("lena_customer_name", name);
+      localStorage.setItem("lena_customer_address", address);
+      localStorage.setItem("lena_customer_district", district);
 
       const opt = districtSelect?.selectedOptions[0];
       const deliveryCost = Number(opt?.dataset.price || 4);
